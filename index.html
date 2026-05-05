@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDPO & DSZO | Nid’s Buses & Trams</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Jazyková lišta */
+        .lang-bar {
+            background-color: #111;
+            padding: 5px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .lang-bar span {
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: transform 0.2s;
+            filter: grayscale(40%);
+        }
+
+        .lang-bar span:hover {
+            transform: scale(1.3);
+            filter: grayscale(0%);
+        }
+
+        header {
+            background-color: #d32f2f;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: 0.3s;
+        }
+
+        nav button:hover {
+            background-color: #555;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #262626;
+            border-radius: 10px;
+        }
+
+        .page { display: none; }
+        .active { display: block; }
+
+        h2 { border-bottom: 2px solid #d32f2f; padding-bottom: 10px; }
+
+        .vehicle-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .category {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #d32f2f;
+        }
+
+        ul { list-style: none; padding: 0; }
+        li { padding: 5px 0; border-bottom: 1px solid #444; }
+
+        .links a {
+            display: block;
+            background-color: #d32f2f;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin: 10px 0;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .links a:hover { background-color: #b71c1c; transform: scale(1.02); }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            .vehicle-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="lang-bar">
+    <span onclick="setLanguage('cz')" title="Čeština">🇨🇿</span>
+    <span onclick="setLanguage('en-gb')" title="English (UK)">🇬🇧</span>
+    <span onclick="setLanguage('en-us')" title="English (US)">🇺🇸</span>
+    <span onclick="setLanguage('pl')" title="Polski">🇵🇱</span>
+    <span onclick="setLanguage('de')" title="Deutsch">🇩🇪</span>
+</div>
+
+<header>
+    <h1 id="main-title">MDPO & DSZO</h1>
+    <p id="sub-title">vCompany v rámci Roblox Nid’s Buses & Trams</p>
+</header>
+
+<nav>
+    <button onclick="showPage('vozovna')" id="btn-vozovna">Vozovna</button>
+    <button onclick="showPage('linky')" id="btn-linky">Linky</button>
+    <button onclick="showPage('odkazy')" id="btn-odkazy">Odkazy</button>
+</nav>
+
+<div class="container">
+    
+    <!-- VOZOVNA -->
+    <div id="vozovna" class="page active">
+        <h2 id="title-vozovna">Vozový park</h2>
+        <div class="vehicle-list">
+            <div class="category">
+                <h3 id="cat-solo">Standardní vozy (Solo)</h3>
+                <ul>
+                    <li>Škoda 14tr</li>
+                    <li>Škoda 26tr (Solaris Trolino 12 III)</li>
+                    <li>Škoda 26tr (Solaris Trolino 12 IV)</li>
+                    <li>SOR BN12</li>
+                    <li>Karosa B951E</li>
+                    <li>Solaris Urbino 12 III</li>
+                    <li>Solaris Urbino 15 II</li>
+                    <li>Solaris Urbino 10.5 IV</li>
+                </ul>
+            </div>
+            <div class="category">
+                <h3 id="cat-artic">Kloubové vozy (Articulated)</h3>
+                <ul>
+                    <li>Škoda 15tr</li>
+                    <li>Škoda 27 Tr Solaris Trolino 18 III</li>
+                    <li>Škoda 27 Tr Solaris Trolino 18 IV</li>
+                    <li>Solaris Urbino 18 III</li>
+                    <li>Solaris Urbino 18 IV</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- LINKY -->
+    <div id="linky" class="page">
+        <h2 id="title-linky">Seznam linek</h2>
+        <p id="desc-linky">Aktuální obsluhované linky v rámci mapy Nid's Buses & Trams:</p>
+        <div class="category">
+            <ul id="line-list">
+                <li><strong>Line 1</strong> – Central Station ↔ Housing Estate</li>
+                <li><strong>Line 3</strong> – City Center ↔ Industrial Zone</li>
+                <li><strong>Line 8</strong> – Airport ↔ Bus Terminal</li>
+                <li><strong>Line 12</strong> – City Loop</li>
+                <li><strong>Line 15 (Trolleybus)</strong> – Depot ↔ Hospital</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ODKAZY -->
+    <div id="odkazy" class="page">
+        <h2 id="title-odkazy">Důležité odkazy</h2>
+        <div class="links">
+            <a href="https://discord.gg/beSUmraDMC" target="_blank" id="lnk-main">Hlavní Discord (vCompany)</a>
+            <a href="https://discord.gg/eb6h3F2uwt" target="_blank" id="lnk-dpo">DPO Discord</a>
+            <a href="https://youtube.com/@petrsplayscz?si=NpLsBUAwQQmAnhcE" target="_blank">YouTube: PetrSPlaysCZ</a>
+        </div>
+    </div>
+
+</div>
+
+<footer id="footer-text">
+    &copy; 2024 MDPO & DSZO vCompany. Vytvořeno pro komunitu Nid’s Buses & Trams.
+</footer>
+
+<script>
+    const translations = {
+        'cz': {
+            'btn-vozovna': 'Vozovna', 'btn-linky': 'Linky', 'btn-odkazy': 'Odkazy',
+            'title-vozovna': 'Vozový park', 'cat-solo': 'Standardní vozy (Solo)', 'cat-artic': 'Kloubové vozy (Articulated)',
+            'title-linky': 'Seznam linek', 'desc-linky': 'Aktuální obsluhované linky:',
+            'title-odkazy': 'Důležité odkazy', 'lnk-main': 'Hlavní Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
+            'footer-text': '© 2024 MDPO & DSZO vCompany. Vytvořeno pro komunitu Nid’s Buses & Trams.'
+        },
+        'en-gb': {
+            'btn-vozovna': 'Depot', 'btn-linky': 'Lines', 'btn-odkazy': 'Links',
+            'title-vozovna': 'Vehicle Fleet', 'cat-solo': 'Standard Buses (Solo)', 'cat-artic': 'Articulated Buses',
+            'title-linky': 'Line List', 'desc-linky': 'Currently operated lines:',
+            'title-odkazy': 'Important Links', 'lnk-main': 'Main Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
+            'footer-text': '© 2024 MDPO & DSZO vCompany. Made for Nid’s Buses & Trams community.'
+        },
+        'en-us': {
+            'btn-vozovna': 'Garage', 'btn-linky': 'Routes', 'btn-odkazy': 'Links',
+            'title-vozovna': 'Fleet', 'cat-solo': 'Standard (Solo)', 'cat-artic': 'Articulated',
+            'title-linky': 'Route List', 'desc-linky': 'Currently active routes:',
+            'title-odkazy': 'Important Links', 'lnk-main': 'Main Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
+            'footer-text': '© 2024 MDPO & DSZO vCompany. Built for Nid’s Buses & Trams.'
+        },
+        'pl': {
+            'btn-vozovna': 'Zajezdnia', 'btn-linky': 'Linie', 'btn-odkazy': 'Linki',
+            'title-vozovna': 'Tabor', 'cat-solo': 'Standardowe (Solo)', 'cat-artic': 'Przegubowe',
+            'title-linky': 'Lista linii', 'desc-linky': 'Aktualnie obsługiwane linie:',
+            'title-odkazy': 'Ważne linki', 'lnk-main': 'Główny Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
+            'footer-text': '© 2024 MDPO & DSZO vCompany. Stworzone dla społeczności Nid’s Buses & Trams.'
+        },
+        'de': {
+            'btn-vozovna': 'Betriebshof', 'btn-linky': 'Linien', 'btn-odkazy': 'Links',
+            'title-vozovna': 'Fahrzeugpark', 'cat-solo': 'Standardwagen (Solo)', 'cat-artic': 'Gelenkwagen',
+            'title-linky': 'Linienliste', 'desc-linky': 'Aktuell betriebene Linien:',
+            'title-odkazy': 'Wichtige Links', 'lnk-main': 'Haupt Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
+            'footer-text': '© 2024 MDPO & DSZO vCompany. Erstellt für die Nid’s Buses & Trams Community.'
+        }
+    };
+
+    function setLanguage(lang) {
+        const t = translations[lang];
+        for (let key in t) {
+            const el = document.getElementById(key);
+            if (el) el.innerText = t[key];
+        }
+    }
+
+    function showPage(pageId) {
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => page.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
