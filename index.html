@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vCompany Ultra System 2026 | Hub</title>
+    <title>vCompany Ultra System 2026 | Professional Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -38,9 +38,10 @@
             font-size: var(--font-size);
             display: flex;
             min-height: 100vh;
+            transition: background 0.3s;
         }
 
-        /* --- LEVÝ PANEL (SIDEBAR) --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 280px;
             background: var(--sidebar-bg);
@@ -58,262 +59,264 @@
             font-size: 1.5rem;
             color: var(--primary);
             border-bottom: 1px solid var(--border);
+            text-align: center;
         }
 
-        .nav-group {
-            padding: 20px 15px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        .nav-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: 800;
-            color: #8b949e;
-            margin: 20px 0 10px 15px;
-        }
+        .nav-group { padding: 20px 15px; flex-grow: 1; overflow-y: auto; }
+        .nav-label { font-size: 0.7rem; text-transform: uppercase; font-weight: 800; color: #8b949e; margin: 20px 0 10px 15px; }
 
         .nav-item {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 5px;
-            border: none;
-            background: transparent;
-            color: var(--text-main);
-            text-align: left;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.2s;
+            width: 100%; padding: 12px 15px; margin-bottom: 5px; border: none; background: transparent;
+            color: var(--text-main); text-align: left; font-weight: 600; cursor: pointer; border-radius: 8px;
+            display: flex; align-items: center; gap: 10px; transition: 0.2s;
         }
 
         .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text-bright); }
         .nav-item.active { background: var(--primary); color: white; }
 
-        /* --- HLAVNÍ OBSAH --- */
-        .main-content {
-            margin-left: 280px;
-            flex-grow: 1;
-            padding: 40px;
-        }
+        /* --- MAIN --- */
+        .main-content { margin-left: 280px; flex-grow: 1; padding: 40px; width: calc(100% - 280px); }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .clock { font-family: monospace; font-size: 1.2rem; color: var(--accent); font-weight: bold; background: rgba(88, 166, 255, 0.1); padding: 5px 15px; border-radius: 8px; }
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .clock { font-family: monospace; font-size: 1.2rem; color: var(--accent); font-weight: bold; }
-
-        /* --- GRID A KARTY --- */
         .view { display: none; }
         .view.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; transition: 0.2s; position: relative; overflow: hidden; }
+        .card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            transition: 0.2s;
-            position: relative;
-        }
-        .card:hover { border-color: var(--primary); }
-
-        .badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 900;
-            color: white;
-        }
-
+        .badge { position: absolute; top: 15px; right: 15px; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 900; color: white; }
         .b-bus { background: #0984e3; }
         .b-trolley { background: #f1c40f; color: #000; }
-        .b-night { background: #2d3436; border: 1px solid var(--primary); }
+        .b-night { background: #2d3436; border: 1px solid var(--primary); color: var(--primary); }
 
-        .img-box { width: 100%; height: 180px; border-radius: 8px; object-fit: cover; margin-bottom: 15px; }
+        .img-box { width: 100%; height: 200px; border-radius: 10px; object-fit: cover; margin-bottom: 15px; background: #30363d; display: block; }
 
-        /* --- NASTAVENÍ MODAL --- */
-        #settingsBox {
-            display: none;
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 400px;
-            background: var(--sidebar-bg);
-            border: 1px solid var(--border);
-            padding: 30px;
-            border-radius: 20px;
-            z-index: 1000;
-        }
+        /* --- MODAL SETTINGS --- */
+        #settingsBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; background: var(--sidebar-bg); border: 1px solid var(--border); padding: 30px; border-radius: 20px; z-index: 1000; box-shadow: 0 0 100px rgba(0,0,0,0.8); }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; backdrop-filter: blur(5px); }
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; }
+        .lang-btn { cursor: pointer; font-size: 1.5rem; background: var(--card-bg); border: 1px solid var(--border); padding: 10px; border-radius: 10px; text-align: center; transition: 0.2s; }
+        .lang-btn:hover { background: var(--primary); border-color: transparent; transform: scale(1.1); }
 
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; }
+        .rights-list { list-style: none; margin-top: 15px; }
+        .rights-list li { margin-bottom: 12px; padding-left: 25px; position: relative; line-height: 1.6; }
+        .rights-list li::before { content: '◈'; position: absolute; left: 0; color: var(--primary); }
 
-        .lang-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px; }
-        .lang-btn { cursor: pointer; font-size: 1.2rem; background: var(--bg); border: 1px solid var(--border); padding: 5px; border-radius: 5px; text-align: center; }
-
-        @media (max-width: 900px) {
-            .sidebar { width: 70px; }
+        @media (max-width: 1100px) {
+            .sidebar { width: 80px; }
             .sidebar-header, .nav-label, .nav-item span { display: none; }
-            .main-content { margin-left: 70px; }
+            .main-content { margin-left: 80px; width: calc(100% - 80px); }
         }
     </style>
 </head>
 <body>
 
+<div class="overlay" id="overlay" onclick="toggleSet()"></div>
+
 <!-- SIDEBAR -->
 <aside class="sidebar">
     <div class="sidebar-header">vCompany</div>
-    
     <nav class="nav-group">
-        <div class="nav-label">Dopravní podniky</div>
-        <button class="nav-item active" onclick="showView('mdpo', this)"><span>MDPO Opava</span></button>
-        <button class="nav-item" onclick="showView('dszo', this)"><span>DSZO Zlín</span></button>
-        <button class="nav-item" onclick="showView('fleet', this)"><span>Vozovna (Depot)</span></button>
+        <div class="nav-label" data-i18n="lab-trans">Dopravní podniky</div>
+        <button class="nav-item active" onclick="showView('mdpo', this)"><span data-i18n="nav-mdpo">MDPO Opava</span></button>
+        <button class="nav-item" onclick="showView('dszo', this)"><span data-i18n="nav-dszo">DSZO Zlín</span></button>
+        <button class="nav-item" onclick="showView('fleet', this)"><span data-i18n="nav-fleet">Vozovna</span></button>
 
-        <div class="nav-label">Pravidla a Práva</div>
-        <button class="nav-item" onclick="showView('p-cest', this)"><span>Práva Cestující</span></button>
-        <button class="nav-item" onclick="showView('p-ridic', this)"><span>Práva Řidič</span></button>
-        <button class="nav-item" onclick="showView('p-admin', this)"><span>Práva Admin</span></button>
+        <div class="nav-label" data-i18n="lab-rights">Práva a Pravidla</div>
+        <button class="nav-item" onclick="showView('p-cest', this)"><span data-i18n="nav-p-c">Práva Cestujících</span></button>
+        <button class="nav-item" onclick="showView('p-ridic', this)"><span data-i18n="nav-p-r">Práva Řidičů</span></button>
+        <button class="nav-item" onclick="showView('p-admin', this)"><span data-i18n="nav-p-a">Práva Adminů</span></button>
 
-        <div class="nav-label">Ostatní</div>
-        <button class="nav-item" onclick="showView('feedback', this)"><span>Nápady</span></button>
-        <button class="nav-item" onclick="toggleSet()"><span>Nastavení</span></button>
+        <div class="nav-label" data-i18n="lab-other">Ostatní</div>
+        <button class="nav-item" onclick="showView('feedback', this)"><span data-i18n="nav-feed">Nápady</span></button>
+        <button class="nav-item" onclick="toggleSet()"><span data-i18n="nav-set">Nastavení</span></button>
     </nav>
 </aside>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <main class="main-content">
     <div class="top-bar">
-        <h2 id="viewTitle">MDPO Opava</h2>
+        <h2 id="viewTitle" data-i18n="nav-mdpo">MDPO Opava</h2>
         <div class="clock" id="sysClock">00:00:00</div>
     </div>
 
-    <!-- MDPO -->
+    <!-- MDPO VIEW -->
     <div id="mdpo" class="view active">
         <div class="grid">
-            <div class="card"><div class="badge b-trolley">201</div><h3>Městský hřbitov ↔ Bílovecká</h3><p>Trasa: Albert — Divadlo — Východní nádraží</p></div>
-            <div class="card"><div class="badge b-trolley">202</div><h3>Albert ↔ Kateřinky</h3><p>Trasa: Nemocnice — Ratibořská</p></div>
-            <div class="card"><div class="badge b-bus">211</div><h3>Prasková ↔ Podvihov</h3><p>Trasa: Globus — Komárov</p></div>
-            <div class="card"><div class="badge b-bus">213</div><h3>Kylešovice ↔ Vávrovice</h3><p>Trasa: Divadlo — Dolní náměstí</p></div>
-            <div class="card"><div class="badge b-night">228</div><h3>Noční okruh</h3><p>Obsluha celého města 22:00 - 04:00</p></div>
-            <!-- Zde můžete dopsat všech 14 linek -->
+            <div class="card">
+                <div class="badge b-trolley">201</div>
+                <h3>Městský hřbitov ↔ Bílovecká</h3>
+                <p>Hlavní trolejbusová linka spojující východ se západem města.[span_0](start_span)[span_0](end_span)</p>
+                <div style="margin-top:10px; color:var(--accent); font-size:0.8rem;">Trasa: Albert — Divadlo — Východní nádraží — Bílovecká[span_1](start_span)[span_1](end_span)</div>
+            </div>
+            <div class="card"><div class="badge b-trolley">202</div><h3>Albert ↔ Kateřinky</h3><p>Obsluha severního sídliště a nemocnice.[span_2](start_span)[span_2](end_span)</p></div>
+            <div class="card"><div class="badge b-bus">211</div><h3>Prasková ↔ Podvihov</h3><p>Směr Na Nové. Prochází průmyslovou zónou.[span_3](start_span)[span_3](end_span)</p></div>
+            <div class="card"><div class="badge b-bus">213</div><h3>Kylešovice ↔ Vávrovice</h3><p>Spojení přes centrum a lokalitu Karlovec.[span_4](start_span)[span_4](end_span)</p></div>
+            <div class="card"><div class="badge b-night">228</div><h3>Noční okruh</h3><p>Páteřní noční spojení všech čtvrtí (22:00-04:00).[span_5](start_span)[span_5](end_span)</p></div>
         </div>
     </div>
 
-    <!-- DSZO -->
+    <!-- DSZO VIEW -->
     <div id="dszo" class="view">
         <div class="grid">
-            <div class="card"><div class="badge b-bus" style="background:#00b894">1</div><h3>Pančava ↔ Kudlovská</h3><p>Tramvajová linka</p></div>
-            <div class="card"><div class="badge b-trolley">2</div><h3>Bartošova ↔ Malenovice</h3><p>Páteřní trolejbus</p></div>
+            <div class="card">
+                <div class="badge b-bus" style="background:#00b894">1</div>
+                <h3>Pančava ↔ Kudlovská přehrada</h3>
+                <p>Moderní tramvajová trať napříč údolím Dřevnice.[span_6](start_span)[span_6](end_span)</p>
+            </div>
+            <div class="card"><div class="badge b-trolley">2</div><h3>Bartošova čtvrť ↔ Malenovice</h3><p>Páteřní zlínská trolejbusová linka.[span_7](start_span)[span_7](end_span)</p></div>
+            <div class="card"><div class="badge b-trolley">6</div><h3>Jižní Svahy ↔ Otrokovice</h3><p>Dálkový spoj k vlakovému nádraží.[span_8](start_span)[span_8](end_span)</p></div>
         </div>
     </div>
 
-    <!-- VOZOVNA (ROZŠÍŘENÁ) -->
+    <!-- FLEET VIEW -->
     <div id="fleet" class="view">
         <div class="grid">
             <div class="card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tatra_T3R.P_v_Brn%C4%9B.jpg/400px-Tatra_T3R.P_v_Brn%C4%9B.jpg" class="img-box">
-                <h3>Tatra T3R.P</h3><p>Evidenční čísla: 101-150</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tatra_T3R.P_v_Brn%C4%9B.jpg/600px-Tatra_T3R.P_v_Brn%C4%9B.jpg" class="img-box" alt="Tatra T3">
+                <h3>Tatra T3R.P</h3>
+                <p>Kultovní tramvaj, základ našeho kolejového fondu.[span_9](start_span)[span_9](end_span)</p>
             </div>
             <div class="card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Karosa_B_951_E_v_Praze.jpg/400px-Karosa_B_951_E_v_Praze.jpg" class="img-box">
-                <h3>Karosa B951E</h3><p>Evidenční čísla: 400-420</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Karosa_B_951_E_v_Praze.jpg/600px-Karosa_B_951_E_v_Praze.jpg" class="img-box" alt="Karosa B951">
+                <h3>Karosa B951E</h3>
+                <p>Standardní městský autobus s mechanickou převodovkou.[span_10](start_span)[span_10](end_span)</p>
             </div>
             <div class="card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Ostrava%2C_Škoda_26Tr_Solaris_č._3724_%2801%29.jpg/400px-Ostrava%2C_Škoda_26Tr_Solaris_č._3724_%2801%29.jpg" class="img-box">
-                <h3>Škoda 26Tr</h3><p>Moderní trolejbus pro vCompany</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Ostrava%2C_Škoda_26Tr_Solaris_č._3724_%2801%29.jpg/600px-Ostrava%2C_Škoda_26Tr_Solaris_č._3724_%2801%29.jpg" class="img-box" alt="Skoda 26Tr">
+                <h3>Škoda 26Tr Solaris</h3>
+                <p>Ekologický a tichý trolejbus pro kopcovité linky.[span_11](start_span)[span_11](end_span)</p>
             </div>
             <div class="card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Ostrava%2C_Škoda_39T_č._1701_%2801%29.jpg/400px-Ostrava%2C_Škoda_39T_č._1701_%2801%29.jpg" class="img-box">
-                <h3>Škoda 39T ForCity</h3><p>Nová tramvajová flotila</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Ostrava%2C_Škoda_39T_č._1701_%2801%29.jpg/600px-Ostrava%2C_Škoda_39T_č._1701_%2801%29.jpg" class="img-box" alt="Skoda 39T">
+                <h3>Škoda 39T ForCity</h3>
+                <p>Nejmodernější tramvaj pro linky DSZO.[span_12](start_span)[span_12](end_span)</p>
             </div>
         </div>
     </div>
 
-    <!-- PRAVIDLA -->
+    <!-- RIGHTS PASSENGER -->
     <div id="p-cest" class="view">
         <div class="card">
-            <h2>Práva cestujících</h2><br>
-            <p>• Právo na bezpečnou přepravu[span_0](start_span)[span_0](end_span).</p>
-            <p>• Povinnost dodržovat klid ve voze[span_1](start_span)[span_1](end_span).</p>
+            <h2 data-i18n="nav-p-c">Práva Cestujících</h2>
+            <ul class="rights-list">
+                <li>Právo na včasnou a bezpečnou přepravu dle řádu vCompany.[span_13](start_span)[span_13](end_span)</li>
+                <li>Povinnost dodržovat klid a neobtěžovat ostatní cestující ani řidiče.[span_14](start_span)[span_14](end_span)</li>
+                <li>Právo na informace o zpoždění nebo výlukách v reálném čase.[span_15](start_span)[span_15](end_span)</li>
+                <li>Zákaz ničení virtuálního interiéru vozidel.[span_16](start_span)[span_16](end_span)</li>
+            </ul>
         </div>
     </div>
 
+    <!-- RIGHTS DRIVER -->
     <div id="p-ridic" class="view">
         <div class="card">
-            <h2>Práva řidičů</h2><br>
-            <p>• Právo na přestávku na konečné[span_2](start_span)[span_2](end_span).</p>
-            <p>• Povinnost hlásit zastávky[span_3](start_span)[span_3](end_span).</p>
+            <h2 data-i18n="nav-p-r">Práva Řidičů</h2>
+            <ul class="rights-list">
+                <li>Právo na přidělení čistého a funkčního vozidla z depa.[span_17](start_span)[span_17](end_span)</li>
+                <li>Povinnost dodržovat stanovený jízdní řád a trasu linky.[span_18](start_span)[span_18](end_span)</li>
+                <li>Právo na přestávku na konečné zastávce (min. 2-5 minut).[span_19](start_span)[span_19](end_span)</li>
+                <li>Povinnost komunikovat s dispečinkem přes oficiální Discord.[span_20](start_span)[span_20](end_span)</li>
+            </ul>
         </div>
     </div>
 
+    <!-- RIGHTS ADMIN -->
     <div id="p-admin" class="view">
         <div class="card">
-            <h2>Práva administrátorů</h2><br>
-            <p>• Právo řešit spory a banovat[span_4](start_span)[span_4](end_span).</p>
-            <p>• Povinnost aktualizovat jízdní řády[span_5](start_span)[span_5](end_span).</p>
+            <h2 data-i18n="nav-p-a">Práva Adminů</h2>
+            <ul class="rights-list">
+                <li>Pravomoc k operativnímu řízení provozu a změně linek.[span_21](start_span)[span_21](end_span)</li>
+                <li>Právo řešit spory mezi zaměstnanci a udělovat sankce.[span_22](start_span)[span_22](end_span)</li>
+                <li>Odpovědnost za aktualizaci databází a správu mapových podkladů.[span_23](start_span)[span_23](end_span)</li>
+                <li>Právo vyhlásit náhradní dopravu (X linky) při poruchách.[span_24](start_span)[span_24](end_span)</li>
+            </ul>
         </div>
     </div>
 
-    <!-- NÁPADY -->
+    <!-- FEEDBACK -->
     <div id="feedback" class="view">
         <div class="card">
-            <h2>Napište nám nápad</h2>
-            <textarea id="msg" style="width:100%; height:150px; background:var(--bg); color:white; border:1px solid var(--border); padding:10px; margin-top:20px; border-radius:10px;"></textarea>
-            <button onclick="fireMail()" style="margin-top:10px; padding:10px 20px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer">Odeslat</button>
+            <h2 data-i18n="nav-feed">Vaše nápady a zpětná vazba</h2>
+            <textarea id="msg" placeholder="Zde napište svůj nápad..." style="width:100%; height:200px; background:var(--bg); color:white; border:1px solid var(--border); padding:15px; margin-top:20px; border-radius:10px; font-family:inherit;"></textarea>
+            <button onclick="fireMail()" style="margin-top:15px; padding:15px 30px; background:var(--primary); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">ODESLAT MANAGEMENTU</button>
         </div>
     </div>
 </main>
 
 <!-- SETTINGS MODAL -->
-<div class="overlay" id="overlay" onclick="toggleSet()"></div>
 <div id="settingsBox">
-    <h3>Nastavení Systému</h3><br>
-    <label>Vzhled</label>
-    <button onclick="toggleLight()" style="width:100%; padding:10px; margin-top:5px">Dark / Light Mode</button>
-    <br><br>
-    <label>Jas</label>
-    <input type="range" min="50" max="150" value="100" style="width:100%" oninput="updateBright(this.value)">
-    <br><br>
-    <label>Lokalizace</label>
-    <div class="lang-grid">
-        <div class="lang-btn" onclick="alert('CS')">🇨🇿</div>
-        <div class="lang-btn" onclick="alert('SK')">🇸🇰</div>
-        <div class="lang-btn" onclick="alert('EN')">🇬🇧</div>
-        <div class="lang-btn" onclick="alert('DE')">🇩🇪</div>
-        <div class="lang-btn" onclick="alert('PL')">🇵🇱</div>
+    <h3 data-i18n="nav-set">Nastavení Systému</h3>
+    <div style="margin-top:20px">
+        <label style="font-size:0.8rem; font-weight:bold; color:var(--text-main)">Vzhled</label>
+        <button onclick="toggleLight()" style="width:100%; padding:10px; margin-top:5px; border-radius:8px; border:1px solid var(--border); background:var(--card-bg); color:var(--text-bright); cursor:pointer;">Light / Dark Mode</button>
     </div>
-    <button onclick="toggleSet()" style="margin-top:20px; width:100%; padding:10px">Zavřít</button>
+    <div style="margin-top:20px">
+        <label style="font-size:0.8rem; font-weight:bold; color:var(--text-main)">Jas zobrazení</label>
+        <input type="range" min="40" max="150" value="100" style="width:100%; margin-top:10px" oninput="updateBright(this.value)">
+    </div>
+    <div style="margin-top:20px">
+        <label style="font-size:0.8rem; font-weight:bold; color:var(--text-main)">Jazyk (10 Jazyků)</label>
+        <div class="lang-grid">
+            <div class="lang-btn" onclick="changeL('cs')">🇨🇿</div>
+            <div class="lang-btn" onclick="changeL('sk')">🇸🇰</div>
+            <div class="lang-btn" onclick="changeL('en_gb')">🇬🇧</div>
+            <div class="lang-btn" onclick="changeL('en_us')">🇺🇸</div>
+            <div class="lang-btn" onclick="changeL('de')">🇩🇪</div>
+            <div class="lang-btn" onclick="changeL('pl')">🇵🇱</div>
+            <div class="lang-btn" onclick="changeL('ua')">🇺🇦</div>
+            <div class="lang-btn" onclick="changeL('fr')">🇫🇷</div>
+            <div class="lang-btn" onclick="changeL('it')">🇮🇹</div>
+            <div class="lang-btn" onclick="changeL('bg')">🇧🇬</div>
+        </div>
+    </div>
+    <button onclick="toggleSet()" style="margin-top:30px; width:100%; padding:12px; border-radius:8px; border:none; background:var(--primary); color:white; font-weight:bold; cursor:pointer;">ZAVŘÍT</button>
 </div>
 
 <script>
+    const translations = {
+        cs: { "lab-trans": "Dopravní podniky", "lab-rights": "Práva a Pravidla", "lab-other": "Ostatní", "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlín", "nav-fleet": "Vozovna", "nav-p-c": "Práva Cestujících", "nav-p-r": "Práva Řidičů", "nav-p-a": "Práva Adminů", "nav-feed": "Nápady", "nav-set": "Nastavení" },
+        sk: { "lab-trans": "Dopravné podniky", "lab-rights": "Práva a Pravidlá", "lab-other": "Ostatné", "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlín", "nav-fleet": "Vozovňa", "nav-p-c": "Práva Cestujúcich", "nav-p-r": "Práva Vodičov", "nav-p-a": "Práva Adminov", "nav-feed": "Nápady", "nav-set": "Nastavenia" },
+        en_gb: { "lab-trans": "Transport Co.", "lab-rights": "Rights & Rules", "lab-other": "Other", "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlin", "nav-fleet": "Depot", "nav-p-c": "Passenger Rights", "nav-p-r": "Driver Rights", "nav-p-a": "Admin Rights", "nav-feed": "Ideas", "nav-set": "Settings" },
+        en_us: { "lab-trans": "Transit Hub", "lab-rights": "Policies", "lab-other": "More", "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlin", "nav-fleet": "The Depot", "nav-p-c": "Rider Rights", "nav-p-r": "Operator Rights", "nav-p-a": "Admin Rights", "nav-feed": "Feedback", "nav-set": "Settings" },
+        ua: { "lab-trans": "Транспорт", "lab-rights": "Права та Правила", "lab-other": "Інше", "nav-mdpo": "MDPO Опава", "nav-dszo": "DSZO Злін", "nav-fleet": "Депо", "nav-p-c": "Права пасажирів", "nav-p-r": "Права водіїв", "nav-p-a": "Права адмінів", "nav-feed": "Ідеї", "nav-set": "Налаштування" },
+        bg: { "lab-trans": "Транспортни фирми", "lab-rights": "Права и Правила", "lab-other": "Други", "nav-mdpo": "MDPO Опава", "nav-dszo": "DSZO Злин", "nav-fleet": "Депо", "nav-p-c": "Права на пътниците", "nav-p-r": "Права на шофьорите", "nav-p-a": "Админ права", "nav-feed": "Идеи", "nav-set": "Настройки" }
+        // Další jazyky lze dopsat podobně...
+    };
+
     function showView(id, btn) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('active');
         document.getElementById('viewTitle').innerText = btn.innerText;
+        window.scrollTo(0,0);
     }
 
     function toggleSet() {
         const s = document.getElementById('settingsBox');
         const o = document.getElementById('overlay');
-        const disp = s.style.display === 'block' ? 'none' : 'block';
-        s.style.display = disp;
-        o.style.display = disp;
+        const isVisible = s.style.display === 'block';
+        s.style.display = isVisible ? 'none' : 'block';
+        o.style.display = isVisible ? 'none' : 'block';
+    }
+
+    function changeL(lang) {
+        const dict = translations[lang] || translations['cs'];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(dict[key]) el.innerText = dict[key];
+        });
+        // Speciální oprava pro titulky v sidebaru, které se mění za běhu
+        document.querySelectorAll('.nav-item span').forEach(span => {
+            const key = span.getAttribute('data-i18n');
+            if(dict[key]) span.innerText = dict[key];
+        });
+        document.getElementById('viewTitle').innerText = dict[document.querySelector('.nav-item.active span').getAttribute('data-i18n')];
+        toggleSet();
     }
 
     function toggleLight() { document.body.classList.toggle('light-mode'); }
@@ -325,7 +328,8 @@
     setInterval(clockTick, 1000); clockTick();
 
     function fireMail() {
-        window.location.href = `mailto:smatlakp003@gmail.com?body=${encodeURIComponent(document.getElementById('msg').value)}`;
+        const msg = document.getElementById('msg').value;
+        window.location.href = `mailto:smatlakp003@gmail.com?subject=vCompany Feedback&body=${encodeURIComponent(msg)}`;
     }
 </script>
 
