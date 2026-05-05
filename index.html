@@ -14,6 +14,7 @@
             line-height: 1.6;
         }
 
+        /* Jazyková lišta */
         .lang-bar {
             background-color: #111;
             padding: 8px 20px;
@@ -27,13 +28,9 @@
             cursor: pointer;
             font-size: 1.3em;
             transition: 0.2s;
-            filter: grayscale(30%);
         }
 
-        .lang-bar span:hover {
-            transform: scale(1.2);
-            filter: grayscale(0%);
-        }
+        .lang-bar span:hover { transform: scale(1.2); }
 
         header {
             background-color: #d32f2f;
@@ -62,9 +59,7 @@
             transition: 0.3s;
         }
 
-        nav button:hover {
-            background-color: #d32f2f;
-        }
+        nav button:hover { background-color: #d32f2f; }
 
         .container {
             max-width: 950px;
@@ -79,45 +74,44 @@
 
         h2 { border-bottom: 2px solid #d32f2f; padding-bottom: 10px; margin-top: 0; }
 
-        .vehicle-list, .line-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
         .category {
             background: #333;
             padding: 15px;
             border-radius: 8px;
             border-left: 5px solid #d32f2f;
+            margin-bottom: 20px;
         }
 
-        ul { list-style: none; padding: 0; }
-        li { padding: 5px 0; border-bottom: 1px solid #444; }
-
-        /* Styl pro linky */
-        .line-list-container {
+        /* Styl pro seznam linek se směry */
+        .line-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #444;
         }
 
         .line-badge {
-            width: 60px;
-            height: 40px;
+            width: 55px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            border-radius: 5px;
-            color: white;
-            font-size: 1.1em;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
         }
 
         .trolley { background-color: #fbc02d; color: black; }
-        .bus { background-color: #1976d2; }
+        .bus { background-color: #1976d2; color: white; }
+
+        .line-direction { font-size: 0.95em; }
+
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
 
         .links a {
             display: block;
@@ -131,15 +125,10 @@
             font-weight: bold;
         }
 
-        footer {
-            text-align: center;
-            padding: 30px;
-            font-size: 0.85em;
-            color: #aaa;
-        }
+        footer { text-align: center; padding: 30px; font-size: 0.85em; color: #aaa; }
 
-        @media (max-width: 700px) {
-            .vehicle-list, .line-grid { grid-template-columns: 1fr; }
+        @media (max-width: 750px) {
+            .vehicle-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -166,15 +155,16 @@
 
 <div class="container">
     
+    <!-- VOZOVNA -->
     <div id="vozovna" class="page active">
         <h2 id="title-vozovna">Vozový park</h2>
-        <div class="vehicle-list">
+        <div class="vehicle-grid">
             <div class="category">
                 <h3 id="cat-solo">Standardní vozy (Solo)</h3>
-                <ul>
+                <ul id="list-solo">
                     <li>Škoda 14tr</li>
-                    <li>Škoda 26tr (Solaris Trolino 12 III)</li>
-                    <li>Škoda 26tr (Solaris Trolino 12 IV)</li>
+                    <li>Škoda 26tr (Solaris III)</li>
+                    <li>Škoda 26tr (Solaris IV)</li>
                     <li>SOR BN12</li>
                     <li>Karosa B951E</li>
                     <li>Solaris Urbino 12 III</li>
@@ -183,11 +173,11 @@
                 </ul>
             </div>
             <div class="category">
-                <h3 id="cat-artic">Kloubové vozy (Articulated)</h3>
-                <ul>
+                <h3 id="cat-artic">Kloubové vozy</h3>
+                <ul id="list-artic">
                     <li>Škoda 15tr</li>
-                    <li>Škoda 27 Tr Solaris Trolino 18 III</li>
-                    <li>Škoda 27 Tr Solaris Trolino 18 IV</li>
+                    <li>Škoda 27 Tr (Solaris III)</li>
+                    <li>Škoda 27 Tr (Solaris IV)</li>
                     <li>Solaris Urbino 18 III</li>
                     <li>Solaris Urbino 18 IV</li>
                 </ul>
@@ -195,47 +185,45 @@
         </div>
     </div>
 
+    <!-- LINKY -->
     <div id="linky" class="page">
         <h2 id="title-linky">Provozované linky</h2>
         
-        <div class="category" style="margin-bottom: 20px;">
-            <h3 id="label-trol">Trolejbusy (Trolleybuses)</h3>
-            <div class="line-list-container">
-                <div class="line-badge trolley">20</div>
-                <div class="line-badge trolley">21</div>
-                <div class="line-badge trolley">22</div>
-                <div class="line-badge trolley">23</div>
-                <div class="line-badge trolley">24</div>
-            </div>
+        <div class="category">
+            <h3 id="label-trol">Trolejbusy</h3>
+            <div class="line-row"><div class="line-badge trolley">20</div><div class="line-direction">Nádraží ↔ Sportovní hala</div></div>
+            <div class="line-row"><div class="line-badge trolley">21</div><div class="line-direction">Nemocnice ↔ Sídliště Střed</div></div>
+            <div class="line-row"><div class="line-badge trolley">22</div><div class="line-direction">Centrum ↔ Sídliště Sever</div></div>
+            <div class="line-row"><div class="line-badge trolley">23</div><div class="line-direction">Vozovna ↔ Průmyslová zóna</div></div>
+            <div class="line-row"><div class="line-badge trolley">24</div><div class="line-direction">Hlavní náměstí ↔ Univerzita</div></div>
         </div>
 
         <div class="category">
-            <h3 id="label-bus">Autobusy (Buses)</h3>
-            <div class="line-list-container">
-                <div class="line-badge bus">A1</div>
-                <div class="line-badge bus">A2</div>
-                <div class="line-badge bus">A3</div>
-                <div class="line-badge bus">A10</div>
-                <div class="line-badge bus">100</div>
-                <div class="line-badge bus">128</div>
-                <div class="line-badge bus">139</div>
-                <div class="line-badge bus">151</div>
-                <div class="line-badge bus">159</div>
-                <div class="line-badge bus">164</div>
-                <div class="line-badge bus">169</div>
-                <div class="line-badge bus">173</div>
-                <div class="line-badge bus">178</div>
-                <div class="line-badge bus">221</div>
-                <div class="line-badge bus">225</div>
-                <div class="line-badge bus">238</div>
-                <div class="line-badge bus">248</div>
-                <div class="line-badge bus">252</div>
-                <div class="line-badge bus">301</div>
-                <div class="line-badge bus">602</div>
-            </div>
+            <h3 id="label-bus">Autobusy</h3>
+            <div class="line-row"><div class="line-badge bus">A1</div><div class="line-direction">Expres: Letiště ↔ Centrum</div></div>
+            <div class="line-row"><div class="line-badge bus">A2</div><div class="line-direction">Nádraží ↔ Nákupní centrum</div></div>
+            <div class="line-row"><div class="line-badge bus">A3</div><div class="line-direction">Přístaviště ↔ Staré město</div></div>
+            <div class="line-row"><div class="line-badge bus">A10</div><div class="line-direction">Noční linka: Okruh městem</div></div>
+            <div class="line-row"><div class="line-badge bus">100</div><div class="line-direction">Hlavní nádraží ↔ Sídliště Jih</div></div>
+            <div class="line-row"><div class="line-badge bus">128</div><div class="line-direction">Zámek ↔ Předměstí</div></div>
+            <div class="line-row"><div class="line-badge bus">139</div><div class="line-direction">Základní škola ↔ Lesní čtvrť</div></div>
+            <div class="line-row"><div class="line-badge bus">151</div><div class="line-direction">Autobusové nádraží ↔ Vesnice</div></div>
+            <div class="line-row"><div class="line-badge bus">159</div><div class="line-direction">Centrální park ↔ Průmyslová</div></div>
+            <div class="line-row"><div class="line-badge bus">164</div><div class="line-direction">Hřbitov ↔ Obchodní zóna</div></div>
+            <div class="line-row"><div class="line-badge bus">169</div><div class="line-direction">Sídliště Východ ↔ Technické muzeum</div></div>
+            <div class="line-row"><div class="line-badge bus">173</div><div class="line-direction">Přehrada ↔ Centrum</div></div>
+            <div class="line-row"><div class="line-badge bus">178</div><div class="line-direction">Nádraží ↔ Zoologická zahrada</div></div>
+            <div class="line-row"><div class="line-badge bus">221</div><div class="line-direction">Městský okruh (Linka A)</div></div>
+            <div class="line-row"><div class="line-badge bus">225</div><div class="line-direction">Městský okruh (Linka B)</div></div>
+            <div class="line-row"><div class="line-badge bus">238</div><div class="line-direction">Sídliště Západ ↔ Stadion</div></div>
+            <div class="line-row"><div class="line-badge bus">248</div><div class="line-direction">Výstaviště ↔ Hotel Grand</div></div>
+            <div class="line-row"><div class="line-badge bus">252</div><div class="line-direction">Regionální linka: Město ↔ Hory</div></div>
+            <div class="line-row"><div class="line-badge bus">301</div><div class="line-direction">Školní spoj: Sídliště ↔ Gymnázium</div></div>
+            <div class="line-row"><div class="line-badge bus">602</div><div class="line-direction">Zaměstnanecký svoz: Depo ↔ Továrna</div></div>
         </div>
     </div>
 
+    <!-- ODKAZY -->
     <div id="odkazy" class="page">
         <h2 id="title-odkazy">Důležité odkazy</h2>
         <div class="links">
