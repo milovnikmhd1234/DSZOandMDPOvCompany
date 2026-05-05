@@ -3,295 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSZO & MDPO vCompany | Official HUB</title>
+    <title>vCompany Hub v3.0 | DSZO & MDPO</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-red: #d32f2f;
-            --secondary-red: #b71c1c;
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --accent-yellow: #fbc02d;
-            --accent-blue: #1976d2;
+            --primary: #e63946;
+            --secondary: #457b9d;
+            --accent: #f1faee;
+            --dark: #1d3557;
+            --bg: #0b0e14;
+            --card: #161b22;
+            --text: #f8f9fa;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --brightness: 100%;
         }
 
         .light-mode {
-            --bg-color: #f5f5f5;
-            --card-bg: #ffffff;
-            --text-color: #212121;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #1d3557;
+            --dark: #f8f9fa;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
             filter: brightness(var(--brightness));
-            margin: 0; transition: all 0.3s ease;
+            transition: var(--transition);
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Navbar & Top Bar */
-        .top-bar {
-            background: #000;
-            padding: 10px 20px;
+        /* --- NAVIGATION --- */
+        .navbar {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--primary-red);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .flags span { cursor: pointer; font-size: 1.4em; margin-left: 10px; filter: grayscale(0.3); transition: 0.2s; }
-        .flags span:hover { filter: grayscale(0); transform: scale(1.2); }
-
-        header {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=1000') center/cover;
-            padding: 60px 20px;
-            text-align: center;
+        .nav-links { display: flex; gap: 1rem; }
+        .nav-links button {
+            background: transparent; border: none; color: var(--text);
+            font-weight: 600; cursor: pointer; padding: 0.5rem 1rem;
+            border-radius: 8px; transition: var(--transition);
+        }
+        .nav-links button:hover, .nav-links button.active {
+            background: var(--primary);
             color: white;
-            border-bottom: 5px solid var(--primary-red);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
         }
 
-        nav {
-            display: flex; flex-wrap: wrap; justify-content: center;
-            background: #222; position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        /* --- SETTINGS PANEL --- */
+        .settings-btn {
+            background: #333; width: 45px; height: 45px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.5rem; transition: var(--transition);
+        }
+        .settings-btn:hover { transform: rotate(45deg); background: var(--primary); }
+
+        .settings-overlay {
+            position: fixed; top: 70px; right: 20px; width: 300px;
+            background: var(--card); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px; padding: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: none; z-index: 1001; animation: slideIn 0.3s ease;
+        }
+        .settings-overlay.open { display: block; }
+
+        .lang-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+            margin-top: 15px;
+        }
+        .lang-grid span { 
+            cursor: pointer; font-size: 1.5rem; transition: transform 0.2s; 
+            filter: grayscale(0.5);
+        }
+        .lang-grid span:hover { transform: scale(1.3); filter: grayscale(0); }
+
+        /* --- HEADER --- */
+        header {
+            padding: 100px 20px;
+            text-align: center;
+            background: linear-gradient(45deg, #1d3557, #e63946);
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            margin-bottom: 50px;
+        }
+        header h1 { font-size: 3.5rem; margin: 0; font-weight: 800; text-transform: uppercase; letter-spacing: -2px; }
+
+        /* --- CONTAINER & PAGES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; min-height: 80vh; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeInUp 0.5s ease forwards; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        nav button {
-            background: none; border: none; color: white;
-            padding: 18px 25px; cursor: pointer; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        /* --- CARDS --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .card {
+            background: var(--card); border-radius: 16px; padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05); transition: var(--transition);
+            position: relative; overflow: hidden;
         }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); }
 
-        nav button:hover, .active-nav { background: var(--primary-red); }
-
-        /* Content */
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; min-height: 70vh; }
-        .page { display: none; animation: slideUp 0.4s ease-out; }
-        .active { display: block; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        h2 { border-bottom: 2px solid var(--primary-red); padding-bottom: 10px; margin-bottom: 30px; }
-
-        /* Grid System */
-        .line-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
-        .card { 
-            background: var(--card-bg); padding: 15px; border-radius: 8px; 
-            display: flex; align-items: center; border-left: 5px solid transparent;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        .line-num {
+            background: var(--primary); color: white; width: 60px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; font-weight: 800; font-size: 1.2rem; margin-bottom: 15px;
         }
-        .card:hover { transform: scale(1.02); border-left-color: var(--primary-red); }
+        .line-bus { background: #1976d2; }
+        .line-night { background: #6a1b9a; }
+        .line-trolley { background: #f9a825; color: black; }
 
-        .badge {
-            width: 60px; height: 40px; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; border-radius: 5px; margin-right: 15px; flex-shrink: 0; color: white;
+        .route-info { font-size: 0.9rem; color: #aaa; border-left: 2px solid var(--primary); padding-left: 10px; }
+
+        /* --- FEEDBACK --- */
+        .feedback-form {
+            max-width: 600px; margin: 0 auto; background: var(--card);
+            padding: 40px; border-radius: 24px; text-align: center;
         }
-
-        /* Fleet Styles */
-        .fleet-row {
-            display: flex; justify-content: space-between; padding: 12px;
-            background: var(--card-bg); margin-bottom: 5px; border-radius: 4px;
-        }
-        .fleet-info-red { background: #7b0000; color: white; padding: 20px; border-radius: 10px; margin-top: 20px; border: 2px dashed #ff0000; }
-
-        /* Forms & Interactive */
-        .rating-section { background: var(--card-bg); padding: 40px; border-radius: 15px; text-align: center; }
-        .stars { font-size: 3em; margin: 20px 0; }
-        .stars span { cursor: pointer; color: #444; transition: 0.2s; }
-        .stars span:hover, .stars span.selected { color: var(--accent-yellow); text-shadow: 0 0 10px rgba(251, 192, 45, 0.5); }
+        .stars { font-size: 3rem; margin: 20px 0; }
+        .star { cursor: pointer; color: #444; transition: 0.2s; }
+        .star.selected { color: #ffca28; text-shadow: 0 0 15px rgba(255,202,40,0.4); }
         
         textarea {
-            width: 100%; max-width: 500px; height: 100px; padding: 10px;
-            background: #333; color: white; border: 1px solid #555; border-radius: 5px; margin-top: 15px;
+            width: 100%; height: 150px; background: #222; border: 1px solid #444;
+            color: white; border-radius: 12px; padding: 15px; font-family: inherit; margin-bottom: 20px;
         }
-
         .submit-btn {
-            background: var(--primary-red); color: white; border: none; padding: 15px 40px;
-            font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 20px;
+            background: var(--primary); color: white; border: none; width: 100%;
+            padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            font-size: 1.1rem; transition: var(--transition);
         }
-        .submit-btn:hover { background: var(--secondary-red); }
+        .submit-btn:hover { background: #c1272d; transform: scale(1.02); }
 
-        footer { background: #000; color: #666; padding: 40px; text-align: center; margin-top: 50px; }
+        /* --- FLEET --- */
+        .fleet-section { margin-bottom: 40px; }
+        .fleet-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; }
+        .fleet-table th, .fleet-table td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .fleet-table th { background: var(--primary); color: white; }
 
-        /* Badge Colors */
-        .trolley { background: var(--accent-yellow); color: #000; }
-        .bus { background: var(--accent-blue); }
-        .tram { background: #4caf50; }
-        .event { background: #e91e63; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        /* --- FOOTER --- */
+        footer {
+            background: #000; padding: 50px 20px; text-align: center; margin-top: 100px;
+            border-top: 2px solid var(--primary);
+        }
+        .social-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .social-btn { padding: 10px 25px; border-radius: 30px; text-decoration: none; color: white; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <div class="settings-panel">
-        <button onclick="toggleTheme()" style="background:none; border:1px solid #444; color:white; cursor:pointer; border-radius:4px; padding:5px 10px;">🌓 Dark/Light</button>
-        <input type="range" min="30" max="150" value="100" oninput="changeBrightness(this.value)" style="margin-left:15px;">
+<!-- NAVIGATION -->
+<nav class="navbar">
+    <div style="font-weight: 800; font-size: 1.5rem; color: var(--primary);">DSZO & MDPO</div>
+    <div class="nav-links">
+        <button onclick="showPage('home')" id="btn-home" class="active">Domů</button>
+        <button onclick="showPage('mdpo')" id="btn-mdpo">MDPO</button>
+        <button onclick="showPage('dszo')" id="btn-dszo">DSZO</button>
+        <button onclick="showPage('vozovna')" id="btn-vozovna">Vozovna</button>
+        <button onclick="showPage('feedback')" id="btn-feedback">Nápady</button>
+        <button onclick="showPage('odkazy')" id="btn-odkazy">Odkazy</button>
     </div>
-    <div class="flags">
-        <span onclick="setLanguage('cz')" title="Česky">🇨🇿</span>
-        <span onclick="setLanguage('sk')" title="Slovensky">🇸🇰</span>
-        <span onclick="setLanguage('en')" title="English">🇬🇧</span>
-        <span onclick="setLanguage('ua')" title="Ukrajinsky">🇺🇦</span>
+    <div class="settings-btn" onclick="toggleSettings()">⚙️</div>
+</nav>
+
+<!-- SETTINGS OVERLAY -->
+<div class="settings-overlay" id="settingsOverlay">
+    <h3 id="t-settings">Nastavení systému</h3>
+    <p id="t-theme">Motiv rozhraní</p>
+    <button onclick="toggleTheme()" class="submit-btn">Dark / Light Mode</button>
+    <hr style="margin:20px 0; opacity:0.1">
+    <p id="t-bright">Úroveň jasu</p>
+    <input type="range" min="30" max="150" value="100" style="width:100%" oninput="changeBrightness(this.value)">
+    <hr style="margin:20px 0; opacity:0.1">
+    <p id="t-lang">Jazyk aplikace</p>
+    <div class="lang-grid">
+        <span onclick="setLang('cz')" title="Česky">🇨🇿</span>
+        <span onclick="setLang('sk')" title="Slovensky">🇸🇰</span>
+        <span onclick="setLang('en')" title="English">🇬🇧</span>
+        <span onclick="setLang('ua')" title="Ukrainian">🇺🇦</span>
+        <span onclick="setLang('de')" title="Deutsch">🇩🇪</span>
+        <span onclick="setLang('pl')" title="Polski">🇵🇱</span>
+        <span onclick="setLang('fr')" title="Français">🇫🇷</span>
+        <span onclick="setLang('es')" title="Español">🇪🇸</span>
+        <span onclick="setLang('it')" title="Italiano">🇮🇹</span>
+        <span onclick="setLang('bg')" title="Bulgarian">🇧🇬</span>
     </div>
 </div>
 
 <header>
-    <h1 id="t-main-title">DSZO & MDPO vCompany Hub</h1>
-    <p id="t-sub-title">Oficiální informační portál pro řidiče a cestující</p>
+    <h1 id="t-welcome">vCompany Hub</h1>
+    <p id="t-subtitle">Informační a administrativní systém pro řidiče</p>
 </header>
 
-<nav>
-    <button onclick="showPage('mdpo')" id="n-mdpo">MDPO Linky</button>
-    <button onclick="showPage('ingame')" id="n-ing">INGAME Linky</button>
-    <button onclick="showPage('dszo')" id="n-dszo">DSZO Linky</button>
-    <button onclick="showPage('vozovna')" id="n-voz">Vozovna</button>
-    <button onclick="showPage('napady')" id="n-nap">Hodnocení & Nápady</button>
-    <button onclick="showPage('odkazy')" id="n-odk">Odkazy</button>
-</nav>
-
 <div class="container">
-    
-    <!-- MDPO (REÁLNÁ OPAVA) -->
-    <div id="mdpo" class="page active">
-        <h2 id="t-mdpo-h">Městský dopravní podnik Opava</h2>
-        <div class="line-grid">
-            <div class="card"><div class="badge" style="background:#fff; color:#c00; border:2px solid #c00">201</div><span>Městský hřbitov ↔ Bílovecká</span></div>
-            <div class="card"><div class="badge" style="background:#fff; color:#c00; border:2px solid #c00">202</div><span>Albert ↔ Kateřinky</span></div>
-            <div class="card"><div class="badge" style="background:#fff; color:#c00; border:2px solid #c00">203</div><span>Jaktař ↔ Globus</span></div>
-            <div class="card"><div class="badge" style="background:#fff; color:#c00; border:2px solid #c00">204</div><span>Englišova ↔ Kylešovice škola</span></div>
-            <div class="card"><div class="badge trolley" style="background:#fff; border:2px solid #fbc02d">205</div><span>Kateřinky ↔ Kylešovice</span></div>
-            <div class="card"><div class="badge bus">211</div><span>Prasková ↔ Podvihov</span></div>
-            <div class="card"><div class="badge bus">212</div><span>Divadlo ↔ Vlaštovičky</span></div>
-            <div class="card"><div class="badge bus">213</div><span>Kylešovice ↔ Vávrovice</span></div>
-            <div class="card"><div class="badge bus">215</div><span>Globus ↔ Divadlo</span></div>
-            <div class="card"><div class="badge bus">218</div><span>Koupaliště ↔ Chvalíkovice</span></div>
-            <div class="card"><div class="badge bus" style="background:#673ab7">228</div><span>Divadlo ↔ Noční okruh</span></div>
-        </div>
-    </div>
 
-    <!-- INGAME (ROBLOX SPECIFIC) -->
-    <div id="ingame" class="page">
-        <h2 id="t-ing-h">INGAME Linky (Roblox World)</h2>
-        <div class="line-grid">
-            <div class="card"><div class="badge event">EJ</div><span>Eventová Jízda (Speciální akce)</span></div>
-            <div class="card"><div class="badge trolley">20</div><span>Hlavní Nádraží ↔ Sportovní Hala</span></div>
-            <div class="card"><div class="badge trolley">22</div><span>Centrální Náměstí ↔ Severní Sídliště</span></div>
-            <div class="card"><div class="badge trolley">25</div><span>Průmyslová zóna ↔ Vozovna</span></div>
-            <div class="card"><div class="badge tram">T1</div><span>Tramvaj: Vozovna ↔ Centrum ↔ Přístav</span></div>
-            <div class="card"><div class="badge tram">T2</div><span>Tramvaj: Okružní linka Město</span></div>
-            <div class="card"><div class="badge bus">101</div><span>Městský okruh A</span></div>
-            <div class="card"><div class="badge bus">102</div><span>Městský okruh B</span></div>
-            <div class="card"><div class="badge bus">159</div><span>Lomy ↔ Autobusový Terminál</span></div>
-            <div class="card"><div class="badge bus">221</div><span>Regionální linka: Vesnice ↔ Město</span></div>
-            <div class="card"><div class="badge bus">A1</div><span>Expres: Letiště ↔ Centrum</span></div>
-        </div>
-    </div>
-
-    <!-- DSZO (ZLÍN) -->
-    <div id="dszo" class="page">
-        <h2 id="t-dszo-h">Dopravní společnost Zlín - Otrokovice</h2>
-        <div class="line-grid">
-            <div class="card"><div class="badge trolley">2</div><span>Bartošova čtvrť ↔ Malenovice</span></div>
-            <div class="card"><div class="badge trolley">6</div><span>Jižní Svahy ↔ Otrokovice</span></div>
-            <div class="card"><div class="badge trolley">10</div><span>Jižní Svahy ↔ Malenovice</span></div>
-            <div class="card"><div class="badge bus">31</div><span>Náměstí Míru ↔ Jaroslavice</span></div>
-            <div class="card"><div class="badge bus">55</div><span>Otrokovice ↔ Štěrkoviště</span></div>
-        </div>
-    </div>
-
-    <!-- VOZOVNA -->
-    <div id="vozovna" class="page">
-        <h2 id="t-voz-h">Vozový park vCompany</h2>
-        
-        <h3>Trolejbusy</h3>
-        <div class="fleet-row"><span>ZiU-9 / ZiU-11</span> <b>Sovětská klasika</b></div>
-        <div class="fleet-row"><span>Škoda 14Tr / 15Tr</span> <b>Československá legenda</b></div>
-        <div class="fleet-row"><span>Škoda 26Tr / 27Tr</span> <b>Moderní nízkopodlažní</b></div>
-        <div class="fleet-row"><span>Solaris Trollino 24 IV</span> <b>Tříčlánkový unikát</b></div>
-
-        <h3>Autobusy</h3>
-        <div class="fleet-row"><span>Karosa B951E</span> <b>Městské sólo</b></div>
-        <div class="fleet-row"><span>Solaris Urbino 12 / 18</span> <b>Standardní a Kloubový</b></div>
-        <div class="fleet-row"><span>Solaris Urbino 10.5</span> <b>Krátký obratný vůz</b></div>
-
-        <h3>Tramvaje</h3>
-        <div class="fleet-row"><span>Tatra T3R.P</span> <b>Klasická tramvaj</b></div>
-        <div class="fleet-row"><span>Škoda ForCity</span> <b>Moderní tramvaj</b></div>
-
-        <div class="fleet-info-red" id="t-disc">
-            ⚠️ Ostatní vozy najdete ve hře, ale s nimi si asi nezajezdíte. Jsou určeny pro AI nebo speciální účely. Více info na Discordu.
-        </div>
-    </div>
-
-    <!-- HODNOCENÍ & NÁPADY -->
-    <div id="napady" class="page">
-        <h2 id="t-rate-h">Hodnocení webu & Vaše nápady</h2>
-        <div class="rating-section">
-            <h3 id="t-how">Jak se vám líbí náš web?</h3>
-            <div class="stars" id="star-container">
-                <span onclick="setStars(1)">★</span><span onclick="setStars(2)">★</span><span onclick="setStars(3)">★</span><span onclick="setStars(4)">★</span><span onclick="setStars(5)">★</span>
+    <!-- HOME PAGE -->
+    <div id="home" class="page active">
+        <h2 id="t-news">Novinky v provozu</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Nové tramvaje Škoda 39T</h3>
+                <p>Do našeho vozového parku v Robloxu byly oficiálně zařazeny nové tramvaje Škoda 39T s moderním informačním systémem.</p>
             </div>
-            <p id="star-status">Vyberte hodnocení</p>
-            
-            <h3 id="t-idea">Máte nápad na zlepšení?</h3>
-            <p id="t-idea-sub">Napište nám ho a po kliknutí na tlačítko se odešle na náš e-mail.</p>
-            <textarea id="idea-text" placeholder="Zde napište svůj nápady nebo připomínky..."></textarea>
-            <br>
-            <button class="submit-btn" onclick="sendIdea()">ODESLAT NÁPAD / HODNOCENÍ</button>
+            <div class="card">
+                <h3>Nábor řidičů</h3>
+                <p>Aktuálně hledáme nové řidiče pro linky MDPO (Opava). Přihlaste se na našem Discordu!</p>
+            </div>
         </div>
     </div>
 
-    <!-- ODKAZY -->
+    <!-- MDPO PAGE -->
+    <div id="mdpo" class="page">
+        <h2 id="t-mdpo-title">MDPO Opava - Autobusové linky</h2>
+        <div class="grid">
+            <!-- Linka 211 -->
+            <div class="card">
+                <div class="line-num line-bus">211</div>
+                <h3>Prasková → Podvihov, Na Nové</h3>
+                <p class="route-info">Prasková → Anenská → Těšínská → Jatky → Ostroj → Papírny → Globus → Komárov → Podvihov</p>
+            </div>
+            <!-- Linka 212 -->
+            <div class="card">
+                <div class="line-num line-bus">212</div>
+                <h3>Divadlo → Vlaštovičky</h3>
+                <p class="route-info">Hlavní spojení centra s okrajovou částí Vlaštovičky.</p>
+            </div>
+            <!-- Linka 213 -->
+            <div class="card">
+                <div class="line-num line-bus">213</div>
+                <h3>Kylešovice, SÚS → Vávrovice, Karlovec</h3>
+                <p class="route-info">Kylešovice → Bartoníčkova → Rooseveltova → Divadlo → Dolní náměstí → Kateřinky → Vávrovice</p>
+            </div>
+            <!-- Linka 214 -->
+            <div class="card">
+                <div class="line-num line-bus">214</div>
+                <h3>Dobrovského → Komárov (Teva)</h3>
+                <p class="route-info">Spojuje Kateřinky / centrum s průmyslovou zónou v Komárově.</p>
+            </div>
+            <!-- Linka 215 -->
+            <div class="card">
+                <div class="line-num line-bus">215</div>
+                <h3>Globus → Divadlo</h3>
+                <p class="route-info">Expresní spojení nákupní zóny Globus s historickým centrem.</p>
+            </div>
+            <!-- Linka 216 -->
+            <div class="card">
+                <div class="line-num line-bus">216</div>
+                <h3>Vávrovice, Držkovice → Dolní náměstí</h3>
+                <p class="route-info">Přímé spojení místní části Držkovice s centrálním náměstím.</p>
+            </div>
+            <!-- Linka 228 -->
+            <div class="card">
+                <div class="line-num line-night">228</div>
+                <h3>Divadlo → Noční okruh</h3>
+                <p class="route-info">Noční linka obsluhující klíčové zastávky po celé Opavě (23:00 - 04:00).</p>
+            </div>
+            <!-- Linka 229 -->
+            <div class="card">
+                <div class="line-num line-night">229</div>
+                <h3>Kylešovice → Divadlo (Noční)</h3>
+                <p class="route-info">Specifické noční spojení pro obyvatele sídliště Kylešovice.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VOZOVNA PAGE -->
+    <div id="vozovna" class="page">
+        <h2 id="t-fleet-title">Vozový park vCompany</h2>
+        
+        <div class="fleet-section">
+            <h3>Tramvaje</h3>
+            <table class="fleet-table">
+                <thead><tr><th>Model</th><th>Specifikace</th><th>Stav</th></tr></thead>
+                <tbody>
+                    <tr><td><b>Tatra T3</b></td><td>Klasická legenda s tyristorovou výzbrojí</td><td>Skladem</td></tr>
+                    <tr><td><b>Škoda 39T</b></td><td>Nízkopodlažní moderní jednotka ForCity Smart</td><td>Skladem</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="fleet-section">
+            <h3>Trolejbusy</h3>
+            <table class="fleet-table">
+                <thead><tr><th>Model</th><th>Typ</th><th>Pohon</th></tr></thead>
+                <tbody>
+                    <tr><td>Škoda 14Tr / 15Tr</td><td>Standard / Kloubový</td><td>Trolejový</td></tr>
+                    <tr><td>Solaris Trollino 24</td><td>Tříčlánkový</td><td>Hybridní / Trolejový</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FEEDBACK PAGE -->
+    <div id="feedback" class="page">
+        <div class="feedback-form">
+            <h2 id="t-feed-h">Máte nápad na zlepšení?</h2>
+            <p id="t-feed-p">Vaše hodnocení a nápady nám pomáhají růst.</p>
+            
+            <div class="stars">
+                <span class="star" onclick="rate(1)">★</span>
+                <span class="star" onclick="rate(2)">★</span>
+                <span class="star" onclick="rate(3)">★</span>
+                <span class="star" onclick="rate(4)">★</span>
+                <span class="star" onclick="rate(5)">★</span>
+            </div>
+            <p id="rating-status">Vyberte hodnocení</p>
+
+            <textarea id="ideaText" placeholder="Zde napište svůj nápad, připomínku nebo vzkaz majiteli..."></textarea>
+            <button class="submit-btn" onclick="sendIdea()" id="t-btn-send">ODESLAT NÁPAD PŘES E-MAIL</button>
+        </div>
+    </div>
+
+    <!-- LINKS PAGE -->
     <div id="odkazy" class="page">
-        <h2 id="t-odk-h">Důležité Odkazy</h2>
-        <a href="https://discord.gg/RaJNFJjkE" class="links-btn dpo-link" target="_blank">Discord: DPO vCompany</a>
-        <a href="https://discord.gg/beSUmraDMC" class="links-btn vco-link" target="_blank">Discord: vCompany Main</a>
-        <a href="https://youtube.com/@petrsplayscz" class="links-btn yt-link" target="_blank">YouTube: PetrSPlaysCZ</a>
+        <h2 id="t-links">Důležité Odkazy</h2>
+        <div class="grid">
+            <a href="https://discord.gg/RaJNFJjkE" target="_blank" class="card" style="text-decoration:none; background:#5865F2">
+                <h3>Discord: DPO vCompany</h3>
+                <p>Hlavní komunikace a hlášení jízd.</p>
+            </a>
+            <a href="https://discord.gg/beSUmraDMC" target="_blank" class="card" style="text-decoration:none; background:#2c2f33">
+                <h3>Discord: vCompany Main</h3>
+                <p>Centrála pro všechny divize simulace.</p>
+            </a>
+            <a href="https://youtube.com/@petrsplayscz" target="_blank" class="card" style="text-decoration:none; background:#ff0000">
+                <h3>YouTube: PetrSPlaysCZ</h3>
+                <p>Streamy a videa z našich jízd.</p>
+            </a>
+        </div>
     </div>
 
 </div>
 
 <footer>
-    <p>&copy; 2026 DSZO & MDPO vCompany | Design pro komunitu PetrSPlaysCZ</p>
-    <p style="font-size: 0.8em; color: #444;">Tento web není oficiální stránkou reálných dopravních podniků.</p>
+    <div class="social-links">
+        <a href="#" class="social-btn" style="background:#5865F2">Discord</a>
+        <a href="#" class="social-btn" style="background:#ff0000">YouTube</a>
+    </div>
+    <p>&copy; 2026 DSZO & MDPO vCompany | Designed by PetrSPlaysCZ Community</p>
+    <p style="font-size:0.7rem; opacity:0.5">Tento web je vytvořen pro účely virtuální simulace v platformě Roblox.</p>
 </footer>
 
 <script>
+    // --- APP STATE ---
     let currentRating = 0;
 
-    function setStars(n) {
-        currentRating = n;
-        const stars = document.querySelectorAll('.stars span');
-        stars.forEach((s, i) => {
-            s.classList.toggle('selected', i < n);
-        });
-        document.getElementById('star-status').innerText = "Hodnocení: " + n + "/5";
-    }
-
-    function sendIdea() {
-        const idea = document.getElementById('idea-text').value;
-        if (currentRating === 0 && idea === "") {
-            alert("Prosím, zadejte alespov hodnocení nebo napište nápad.");
-            return;
-        }
-        
-        const subject = encodeURIComponent("Nápad/Hodnocení pro vCompany Web");
-        const body = encodeURIComponent(`Hodnocení: ${currentRating}/5\n\nNápad: ${idea}`);
-        const mailtoUrl = `mailto:smatlakp003@gmail.com?subject=${subject}&body=${body}`;
-        
-        window.location.href = mailtoUrl;
-        alert("Otevírám e-mailového klienta...");
-    }
-
+    // --- NAVIGATION ---
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
+        document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
-        document.querySelector(`button[onclick="showPage('${pageId}')"]`).classList.add('active-nav');
-        window.scrollTo(0,0);
+        document.getElementById('btn-' + pageId).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if(document.getElementById('settingsOverlay').classList.contains('open')) toggleSettings();
+    }
+
+    // --- SETTINGS ---
+    function toggleSettings() {
+        document.getElementById('settingsOverlay').classList.toggle('open');
     }
 
     function toggleTheme() {
@@ -302,28 +387,55 @@
         document.documentElement.style.setProperty('--brightness', val + '%');
     }
 
-    const langData = {
+    // --- FEEDBACK ---
+    function rate(n) {
+        currentRating = n;
+        const stars = document.querySelectorAll('.star');
+        stars.forEach((s, i) => {
+            s.classList.toggle('selected', i < n);
+        });
+        document.getElementById('rating-status').innerText = `Hodnocení: ${n}/5`;
+    }
+
+    function sendIdea() {
+        const text = document.getElementById('ideaText').value;
+        if(currentRating === 0 && text === "") {
+            alert("Prosím zadejte hodnocení nebo napište nápad.");
+            return;
+        }
+        
+        const subject = encodeURIComponent("vCompany Web Feedback");
+        const body = encodeURIComponent(`Moje hodnocení: ${currentRating}/5\n\nNápad/Zpráva:\n${text}`);
+        window.location.href = `mailto:smatlakp003@gmail.com?subject=${subject}&body=${body}`;
+        
+        alert("Byl otevřen váš e-mailový klient pro odeslání.");
+    }
+
+    // --- LANGUAGES ---
+    const translations = {
         'cz': {
-            'n-mdpo': 'MDPO Linky', 'n-voz': 'Vozovna', 'n-nap': 'Nápady', 't-voz-h': 'Vozový park',
-            't-rate-h': 'Hodnocení & Nápady', 't-how': 'Jak se vám líbí náš web?', 't-idea': 'Máte nápad na zlepšení?'
+            't-settings': 'Nastavení systému', 't-theme': 'Motiv rozhraní', 't-lang': 'Jazyk aplikace',
+            'btn-home': 'Domů', 'btn-mdpo': 'MDPO Linky', 'btn-vozovna': 'Vozovna', 'btn-feedback': 'Nápady'
         },
         'sk': {
-            'n-mdpo': 'MDPO Linky', 'n-voz': 'Vozovňa', 'n-nap': 'Nápady', 't-voz-h': 'Vozový park',
-            't-rate-h': 'Hodnotenie & Nápady', 't-how': 'Ako sa vám páči náš web?', 't-idea': 'Máte nápad na zlepšenie?'
+            't-settings': 'Nastavenia systému', 't-theme': 'Motív rozhraní', 't-lang': 'Jazyk aplikácie',
+            'btn-home': 'Domov', 'btn-mdpo': 'MDPO Linky', 'btn-vozovna': 'Vozovňa', 'btn-feedback': 'Nápady'
         },
         'en': {
-            'n-mdpo': 'MDPO Lines', 'n-voz': 'Depot', 'n-nap': 'Ideas', 't-voz-h': 'Fleet',
-            't-rate-h': 'Rating & Ideas', 't-how': 'Do you like our web?', 't-idea': 'Have an idea?'
-        }
+            't-settings': 'System Settings', 't-theme': 'UI Theme', 't-lang': 'App Language',
+            'btn-home': 'Home', 'btn-mdpo': 'MDPO Lines', 'btn-vozovna': 'Depot', 'btn-feedback': 'Ideas'
+        },
+        // Další jazyky by se přidaly sem stejným způsobem...
     };
 
-    function setLanguage(lang) {
-        const data = langData[lang];
-        if (!data) return;
-        for (let key in data) {
+    function setLang(lang) {
+        const t = translations[lang];
+        if(!t) return;
+        for(let key in t) {
             const el = document.getElementById(key);
-            if (el) el.innerText = data[key];
+            if(el) el.innerText = t[key];
         }
+        toggleSettings();
     }
 </script>
 
