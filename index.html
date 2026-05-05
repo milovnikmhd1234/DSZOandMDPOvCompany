@@ -17,30 +17,30 @@
         /* Jazyková lišta */
         .lang-bar {
             background-color: #111;
-            padding: 5px 20px;
+            padding: 8px 20px;
             display: flex;
             justify-content: flex-end;
             gap: 15px;
-            border-bottom: 1px solid #333;
+            border-bottom: 2px solid #d32f2f;
         }
 
         .lang-bar span {
             cursor: pointer;
-            font-size: 1.2em;
-            transition: transform 0.2s;
-            filter: grayscale(40%);
+            font-size: 1.3em;
+            transition: 0.2s;
+            filter: grayscale(30%);
         }
 
         .lang-bar span:hover {
-            transform: scale(1.3);
+            transform: scale(1.2);
             filter: grayscale(0%);
         }
 
         header {
             background-color: #d32f2f;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         nav {
@@ -59,11 +59,12 @@
             padding: 15px 25px;
             cursor: pointer;
             font-size: 1.1em;
+            font-weight: bold;
             transition: 0.3s;
         }
 
         nav button:hover {
-            background-color: #555;
+            background-color: #d32f2f;
         }
 
         .container {
@@ -72,12 +73,13 @@
             padding: 20px;
             background-color: #262626;
             border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .page { display: none; }
         .active { display: block; }
 
-        h2 { border-bottom: 2px solid #d32f2f; padding-bottom: 10px; }
+        h2 { border-bottom: 2px solid #d32f2f; padding-bottom: 10px; margin-top: 0; }
 
         .vehicle-list {
             display: grid;
@@ -93,14 +95,39 @@
         }
 
         ul { list-style: none; padding: 0; }
-        li { padding: 5px 0; border-bottom: 1px solid #444; }
+        li { padding: 8px 0; border-bottom: 1px solid #444; }
+
+        /* Styl pro linky */
+        .line-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .line-number {
+            width: 50px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .trolley { background-color: #fbc02d; color: black; } /* Žlutá pro trolejbusy */
+        .bus { background-color: #1976d2; } /* Modrá pro autobusy */
 
         .links a {
             display: block;
             background-color: #d32f2f;
             color: white;
             text-decoration: none;
-            padding: 12px;
+            padding: 15px;
             margin: 10px 0;
             text-align: center;
             border-radius: 5px;
@@ -108,13 +135,13 @@
             transition: 0.3s;
         }
 
-        .links a:hover { background-color: #b71c1c; transform: scale(1.02); }
+        .links a:hover { background-color: #b71c1c; transform: translateY(-2px); }
 
         footer {
             text-align: center;
-            padding: 20px;
-            font-size: 0.8em;
-            color: #888;
+            padding: 30px;
+            font-size: 0.85em;
+            color: #aaa;
         }
 
         @media (max-width: 600px) {
@@ -177,16 +204,31 @@
 
     <!-- LINKY -->
     <div id="linky" class="page">
-        <h2 id="title-linky">Seznam linek</h2>
-        <p id="desc-linky">Aktuální obsluhované linky v rámci mapy Nid's Buses & Trams:</p>
-        <div class="category">
-            <ul id="line-list">
-                <li><strong>Line 1</strong> – Central Station ↔ Housing Estate</li>
-                <li><strong>Line 3</strong> – City Center ↔ Industrial Zone</li>
-                <li><strong>Line 8</strong> – Airport ↔ Bus Terminal</li>
-                <li><strong>Line 12</strong> – City Loop</li>
-                <li><strong>Line 15 (Trolleybus)</strong> – Depot ↔ Hospital</li>
-            </ul>
+        <h2 id="title-linky">Provozované linky</h2>
+        <p id="desc-linky">Seznam linek odpovídající hernímu schématu vCompany:</p>
+        
+        <h3 id="label-trol">Trolejbusy</h3>
+        <div class="line-item">
+            <div class="line-number trolley">20</div>
+            <span>Nádraží ↔ Sportovní hala</span>
+        </div>
+        <div class="line-item">
+            <div class="line-number trolley">22</div>
+            <span>Centrum ↔ Sídliště Sever</span>
+        </div>
+
+        <h3 id="label-bus">Autobusy</h3>
+        <div class="line-item">
+            <div class="line-number bus">62</div>
+            <span>Průmyslová zóna ↔ Hlavní náměstí</span>
+        </div>
+        <div class="line-item">
+            <div class="line-number bus">90</div>
+            <span>Předměstí ↔ Letiště (Express)</span>
+        </div>
+        <div class="line-item">
+            <div class="line-number bus">252</div>
+            <span>Meziměstská linka ↔ Vesnice</span>
         </div>
     </div>
 
@@ -203,7 +245,7 @@
 </div>
 
 <footer id="footer-text">
-    &copy; 2024 MDPO & DSZO vCompany. Vytvořeno pro komunitu Nid’s Buses & Trams.
+    &copy; 2026 MDPO & DSZO vCompany. Vytvořeno pro komunitu Nid’s Buses & Trams.
 </footer>
 
 <script>
@@ -211,37 +253,42 @@
         'cz': {
             'btn-vozovna': 'Vozovna', 'btn-linky': 'Linky', 'btn-odkazy': 'Odkazy',
             'title-vozovna': 'Vozový park', 'cat-solo': 'Standardní vozy (Solo)', 'cat-artic': 'Kloubové vozy (Articulated)',
-            'title-linky': 'Seznam linek', 'desc-linky': 'Aktuální obsluhované linky:',
+            'title-linky': 'Provozované linky', 'desc-linky': 'Seznam linek v rámci mapy:',
+            'label-trol': 'Trolejbusy', 'label-bus': 'Autobusy',
             'title-odkazy': 'Důležité odkazy', 'lnk-main': 'Hlavní Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2024 MDPO & DSZO vCompany. Vytvořeno pro komunitu Nid’s Buses & Trams.'
+            'footer-text': '© 2026 MDPO & DSZO vCompany. Vytvořeno pro komunitu Nid’s Buses & Trams.'
         },
         'en-gb': {
             'btn-vozovna': 'Depot', 'btn-linky': 'Lines', 'btn-odkazy': 'Links',
             'title-vozovna': 'Vehicle Fleet', 'cat-solo': 'Standard Buses (Solo)', 'cat-artic': 'Articulated Buses',
-            'title-linky': 'Line List', 'desc-linky': 'Currently operated lines:',
+            'title-linky': 'Operated Lines', 'desc-linky': 'List of lines on the map:',
+            'label-trol': 'Trolleybuses', 'label-bus': 'Buses',
             'title-odkazy': 'Important Links', 'lnk-main': 'Main Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2024 MDPO & DSZO vCompany. Made for Nid’s Buses & Trams community.'
+            'footer-text': '© 2026 MDPO & DSZO vCompany. Made for Nid’s Buses & Trams.'
         },
         'en-us': {
             'btn-vozovna': 'Garage', 'btn-linky': 'Routes', 'btn-odkazy': 'Links',
             'title-vozovna': 'Fleet', 'cat-solo': 'Standard (Solo)', 'cat-artic': 'Articulated',
-            'title-linky': 'Route List', 'desc-linky': 'Currently active routes:',
+            'title-linky': 'Routes', 'desc-linky': 'Active routes on map:',
+            'label-trol': 'Trolleybuses', 'label-bus': 'Buses',
             'title-odkazy': 'Important Links', 'lnk-main': 'Main Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2024 MDPO & DSZO vCompany. Built for Nid’s Buses & Trams.'
+            'footer-text': '© 2026 MDPO & DSZO vCompany. Built for Nid’s Buses & Trams.'
         },
         'pl': {
             'btn-vozovna': 'Zajezdnia', 'btn-linky': 'Linie', 'btn-odkazy': 'Linki',
             'title-vozovna': 'Tabor', 'cat-solo': 'Standardowe (Solo)', 'cat-artic': 'Przegubowe',
-            'title-linky': 'Lista linii', 'desc-linky': 'Aktualnie obsługiwane linie:',
+            'title-linky': 'Obsługiwane linie', 'desc-linky': 'Lista linii na mapie:',
+            'label-trol': 'Trolejbusy', 'label-bus': 'Autobusy',
             'title-odkazy': 'Ważne linki', 'lnk-main': 'Główny Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2024 MDPO & DSZO vCompany. Stworzone dla społeczności Nid’s Buses & Trams.'
+            'footer-text': '© 2026 MDPO & DSZO vCompany. Stworzone dla Nid’s Buses & Trams.'
         },
         'de': {
             'btn-vozovna': 'Betriebshof', 'btn-linky': 'Linien', 'btn-odkazy': 'Links',
             'title-vozovna': 'Fahrzeugpark', 'cat-solo': 'Standardwagen (Solo)', 'cat-artic': 'Gelenkwagen',
-            'title-linky': 'Linienliste', 'desc-linky': 'Aktuell betriebene Linien:',
+            'title-linky': 'Liniennetz', 'desc-linky': 'Linienliste auf der Karte:',
+            'label-trol': 'Obusse', 'label-bus': 'Busse',
             'title-odkazy': 'Wichtige Links', 'lnk-main': 'Haupt Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2024 MDPO & DSZO vCompany. Erstellt für die Nid’s Buses & Trams Community.'
+            'footer-text': '© 2026 MDPO & DSZO vCompany. Erstellt für Nid’s Buses & Trams.'
         }
     };
 
