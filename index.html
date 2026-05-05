@@ -7,292 +7,213 @@
     <style>
         :root {
             --primary-red: #d32f2f;
-            --dark-bg: #1a1a1a;
+            --bg-color: #1a1a1a;
             --card-bg: #262626;
-            --hover-bg: #333;
-            --accent-blue: #1976d2;
-            --accent-yellow: #fbc02d;
-            --accent-purple: #7b1fa2;
+            --text-color: #ffffff;
+            --nav-bg: #333;
+            --brightness: 100%;
+        }
+
+        .light-mode {
+            --bg-color: #f0f0f0;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --nav-bg: #ddd;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--dark-bg);
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            line-height: 1.5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            filter: brightness(var(--brightness));
+            margin: 0; transition: 0.3s;
         }
 
-        .lang-bar {
+        /* Jazyková lišta */
+        .top-bar {
             background-color: #111;
-            padding: 10px 20px;
+            padding: 10px;
             display: flex;
-            justify-content: flex-end;
-            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 3px solid var(--primary-red);
             flex-wrap: wrap;
         }
 
-        .lang-bar span { cursor: pointer; font-size: 1.4em; transition: 0.3s; }
-        .lang-bar span:hover { transform: scale(1.2); }
+        .flags span { cursor: pointer; font-size: 1.5em; margin-left: 10px; transition: 0.2s; }
+        .flags span:hover { transform: scale(1.3); }
+
+        /* Nastavení */
+        .settings-panel { padding: 10px; display: flex; gap: 15px; align-items: center; }
 
         header {
             background-color: var(--primary-red);
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            padding: 25px; text-align: center; color: white;
         }
 
         nav {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            background-color: #333;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            display: flex; flex-wrap: wrap; justify-content: center;
+            background-color: var(--nav-bg); position: sticky; top: 0; z-index: 1000;
         }
 
         nav button {
-            background: none;
-            border: none;
-            color: white;
-            padding: 15px 20px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: 0.3s;
+            background: none; border: none; color: var(--text-color);
+            padding: 15px 20px; cursor: pointer; font-weight: bold; transition: 0.3s;
         }
 
-        nav button:hover { background-color: var(--hover-bg); }
-        .active-nav { background-color: var(--primary-red) !important; }
+        nav button:hover, .active-nav { background-color: var(--primary-red) !important; color: white !important; }
 
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .page { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .container { max-width: 1100px; margin: 20px auto; padding: 20px; }
+        .page { display: none; }
         .active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        h2 { border-left: 5px solid var(--primary-red); padding-left: 15px; margin-bottom: 25px; }
-        h3 { color: #bbb; text-transform: uppercase; font-size: 0.9em; margin-top: 30px; }
-
-        .category {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
+        .category { background: var(--card-bg); padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        
+        .fleet-item {
+            display: flex; justify-content: space-between; padding: 10px;
+            border-bottom: 1px solid #555;
         }
 
-        .line-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 15px;
-        }
+        .line-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+        .line-card { display: flex; align-items: center; padding: 10px; background: var(--card-bg); border: 1px solid #555; border-radius: 8px; }
+        .badge { width: 45px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 4px; margin-right: 10px; color: white; }
 
-        .line-card {
-            display: flex;
-            align-items: flex-start;
-            padding: 12px;
-            background: #333;
-            border-radius: 8px;
-        }
+        /* Odkazy */
+        .links-btn { display: block; padding: 15px; text-align: center; border-radius: 8px; font-weight: bold; text-decoration: none; margin-bottom: 10px; color: white; }
+        .dpo-link { background: #5865F2; }
+        .vco-link { background: #d32f2f; }
 
-        .line-badge {
-            width: 55px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            border-radius: 6px;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
+        /* Hodnocení */
+        .rating-box { text-align: center; margin-top: 20px; }
+        .stars { font-size: 2em; cursor: pointer; color: #555; }
+        .star-active { color: #fbc02d; }
 
-        .b-trolley { background-color: var(--accent-yellow); color: #000; }
-        .b-bus { background-color: var(--accent-blue); color: #fff; }
-        .b-mdpo-t { background-color: #fff; color: #cc0000; border: 2px solid #cc0000; }
-        .b-night { background-color: var(--accent-purple); color: #fff; }
-
-        .line-content { display: flex; flex-direction: column; }
-        .line-title { font-weight: bold; }
-        .line-desc { font-size: 0.85em; color: #aaa; }
-
-        .fleet-table { width: 100%; border-collapse: collapse; }
-        .fleet-table td { padding: 12px; border-bottom: 1px solid #444; }
-        .model-name { font-weight: bold; color: var(--accent-yellow); }
-
-        .links-btn {
-            display: block;
-            background: var(--primary-red);
-            color: white;
-            text-decoration: none;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        footer { text-align: center; padding: 40px 20px; color: #666; font-size: 0.9em; }
+        footer { text-align: center; padding: 30px; opacity: 0.7; }
     </style>
 </head>
 <body>
 
-<div class="lang-bar">
-    <span onclick="setLanguage('cz')">🇨🇿</span>
-    <span onclick="setLanguage('en-gb')">🇬🇧</span>
-    <span onclick="setLanguage('en-us')">🇺🇸</span>
-    <span onclick="setLanguage('pl')">🇵🇱</span>
-    <span onclick="setLanguage('de')">🇩🇪</span>
-    <span onclick="setLanguage('it')">🇮🇹</span>
-    <span onclick="setLanguage('bg')">🇧🇬</span>
+<div class="top-bar">
+    <div class="settings-panel">
+        <button onclick="toggleTheme()">🌓 Mode</button>
+        <input type="range" min="50" max="150" value="100" oninput="changeBrightness(this.value)" title="Jas">
+    </div>
+    <div class="flags">
+        <span onclick="setLanguage('cz')">🇨🇿</span>
+        <span onclick="setLanguage('sk')">🇸🇰</span>
+        <span onclick="setLanguage('ua')">🇺🇦</span>
+        <span onclick="setLanguage('en')">🇬🇧</span>
+        <span onclick="setLanguage('de')">🇩🇪</span>
+        <span onclick="setLanguage('es')">🇪🇸</span>
+        <span onclick="setLanguage('it')">🇮🇹</span>
+        <span onclick="setLanguage('bg')">🇧🇬</span>
+    </div>
 </div>
 
 <header>
-    <h1>DSZO & MDPO vCompany</h1>
+    <h1 id="main-title">DSZO & MDPO vCompany</h1>
 </header>
 
 <nav>
-    <button onclick="showPage('mdpo')" id="btn-mdpo">MDPO Lines</button>
-    <button onclick="showPage('ingame')" id="btn-ing">INGAME Lines</button>
-    <button onclick="showPage('dszo')" id="btn-dszo">DSZO Lines</button>
-    <button onclick="showPage('vozovna')" id="btn-voz">Vozovna</button>
-    <button onclick="showPage('odkazy')" id="btn-odk">Odkazy</button>
+    <button onclick="showPage('mdpo')" id="nav-mdpo">MDPO Linky</button>
+    <button onclick="showPage('ingame')" id="nav-ing">INGAME Linky</button>
+    <button onclick="showPage('dszo')" id="nav-dszo">DSZO Linky</button>
+    <button onclick="showPage('vozovna')" id="nav-voz">Vozovna</button>
+    <button onclick="showPage('odkazy')" id="nav-odk">Odkazy</button>
 </nav>
 
 <div class="container">
     
-    <!-- VOZOVNA (AKTUALIZOVÁNO) -->
+    <!-- VOZOVNA -->
     <div id="vozovna" class="page">
-        <h2 id="t-voz">Vozový park vCompany</h2>
+        <h2 id="t-voz-title">Vozový park</h2>
         <div class="category">
-            <table class="fleet-table">
-                <tr><td><span class="model-name">ZiU-9 / ZiU-11</span></td><td>Sovětská trolejbusová klasika</td></tr>
-                <tr><td><span class="model-name">Škoda 14Tr / 15Tr</span></td><td>Vysokopodlažní legendy (Solo i Kloub)</td></tr>
-                <tr><td><span class="model-name">Škoda 26Tr / 27Tr Solaris</span></td><td>Nízkopodlažní trolejbusy (III. & IV. generace)</td></tr>
-                <tr><td><span class="model-name">Solaris Trollino 24 IV</span></td><td>Tříčlánkový velkokapacitní trolejbus</td></tr>
-                <tr><td><span class="model-name">Solaris Urbino 10.5 / 12 / 15 / 18</span></td><td>Kompletní řada autobusů Solaris</td></tr>
-                <tr><td><span class="model-name">Karosa B951E / B961</span></td><td>Československá autobusová klasika</td></tr>
-            </table>
+            <h3 id="t-trol">Trolejbusy</h3>
+            <div class="fleet-item"><b>ZiU-9</b> <span>Classic USSR</span></div>
+            <div class="fleet-item"><b>ZiU-11</b> <span>Short version</span></div>
+            <div class="fleet-item"><b>Škoda 14Tr</b> <span>Solo standard</span></div>
+            <div class="fleet-item"><b>Škoda 15Tr</b> <span>Articulated classic</span></div>
+            <div class="fleet-item"><b>Solaris Trollino 24 IV</b> <span>Mega Trolleybus</span></div>
+        </div>
+        <div class="category">
+            <h3 id="t-bus">Autobusy</h3>
+            <div class="fleet-item"><b>Karosa B951E</b> <span>Classic Bus</span></div>
+            <div class="fleet-item"><b>Solaris Urbino 18</b> <span>Modern Articulated</span></div>
         </div>
     </div>
 
-    <!-- MDPO (ZŮSTÁVÁ STEJNÉ - KOMPLETNÍ) -->
+    <!-- MDPO -->
     <div id="mdpo" class="page active">
-        <h2 id="t-mdpo">MDPO Opava - Realistické linky</h2>
-        <h3>Trolejbusy</h3>
+        <h2 id="t-mdpo-title">MDPO Opava</h2>
         <div class="line-grid">
-            <div class="line-card"><div class="line-badge b-mdpo-t">201</div><div class="line-info"><span class="line-title">Hřbitov ↔ Bílovecká</span></div></div>
-            <div class="line-card"><div class="line-badge b-mdpo-t">202</div><div class="line-info"><span class="line-title">Albert ↔ Kateřinky</span></div></div>
-            <div class="line-card"><div class="line-badge b-mdpo-t">203</div><div class="line-info"><span class="line-title">Jaktař ↔ Globus</span></div></div>
-            <div class="line-card"><div class="line-badge b-mdpo-t">204</div><div class="line-info"><span class="line-title">Englišova ↔ Kylešovice škola</span></div></div>
-        </div>
-        <h3>Autobusy</h3>
-        <div class="line-grid">
-            <div class="line-card"><div class="line-badge b-bus">211</div><div class="line-content"><span class="line-title">Prasková ↔ Podvihov</span><span class="line-desc">Průjezd: Anenská, Ostroj, Globus, Komárov</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">212</div><div class="line-content"><span class="line-title">Divadlo ↔ Vlaštovičky</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">213</div><div class="line-content"><span class="line-title">Kylešovice ↔ Vávrovice, Karlovec</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">214</div><div class="line-content"><span class="line-title">Dobrovského ↔ Komárov (Teva)</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">215</div><div class="line-content"><span class="line-title">Globus ↔ Divadlo</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">216</div><div class="line-content"><span class="line-title">Držkovice ↔ Dolní náměstí</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">217</div><div class="line-content"><span class="line-title">Slavkov ↔ Divadlo</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">218</div><div class="line-content"><span class="line-title">Koupaliště ↔ Chvalíkovice</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">219</div><div class="line-content"><span class="line-title">Otice ↔ Malé Hoštice</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">220</div><div class="line-content"><span class="line-title">Prasková ↔ Suché Lazce</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">222</div><div class="line-content"><span class="line-title">Raduň ↔ Podvihov</span></div></div>
-            <div class="line-card"><div class="line-badge b-bus">223</div><div class="line-content"><span class="line-title">Prasková ↔ Komárov (Teva 2)</span></div></div>
-            <div class="line-card"><div class="line-badge b-night">228</div><div class="line-content"><span class="line-title">Divadlo ↔ Noční okruh</span></div></div>
-            <div class="line-card"><div class="line-badge b-night">229</div><div class="line-content"><span class="line-title">Kylešovice ↔ Divadlo</span></div></div>
-        </div>
-    </div>
-
-    <!-- INGAME (VŠECHNY LINKY) -->
-    <div id="ingame" class="page">
-        <h2 id="t-ing">INGAME Lines (Roblox)</h2>
-        <div class="line-grid">
-            <div class="line-card"><div class="line-badge b-trolley">20</div><div class="line-title">Nádraží - Hala</div></div>
-            <div class="line-card"><div class="line-badge b-trolley">21</div><div class="line-title">Nemocnice - Střed</div></div>
-            <div class="line-card"><div class="line-badge b-trolley">22</div><div class="line-title">Centrum - Sever</div></div>
-            <div class="line-card"><div class="line-badge b-trolley">23</div><div class="line-title">Vozovna - Průmysl</div></div>
-            <div class="line-card"><div class="line-badge b-trolley">24</div><div class="line-title">Náměstí - Uni</div></div>
-            <div class="line-card"><div class="line-badge b-bus">A1</div><div class="line-title">Letiště - Centrum</div></div>
-            <div class="line-card"><div class="line-badge b-bus">A2</div><div class="line-title">Okruh A</div></div>
-            <div class="line-card"><div class="line-badge b-bus">A3</div><div class="line-title">Okruh B</div></div>
-            <div class="line-card"><div class="line-badge b-bus">A10</div><div class="line-title">Noční Expres</div></div>
-            <div class="line-card"><div class="line-badge b-bus">100</div><div class="line-title">Nádraží - Jih</div></div>
-            <div class="line-card"><div class="line-badge b-bus">128</div><div class="line-title">Škola - Předměstí</div></div>
-            <div class="line-card"><div class="line-badge b-bus">139</div><div class="line-title">OC - Sídliště</div></div>
-            <div class="line-card"><div class="line-badge b-bus">151</div><div class="line-title">Náměstí - Přístav</div></div>
-            <div class="line-card"><div class="line-badge b-bus">159</div><div class="line-title">Lomy - Terminál</div></div>
-            <div class="line-card"><div class="line-badge b-bus">164</div><div class="line-title">Západ - Nemocnice</div></div>
-            <div class="line-card"><div class="line-badge b-bus">169</div><div class="line-title">Vesnice - Nádraží</div></div>
-            <div class="line-card"><div class="line-badge b-bus">173</div><div class="line-title">Hrad - Centrum</div></div>
-            <div class="line-card"><div class="line-badge b-bus">178</div><div class="line-title">Zahrady - Nádraží</div></div>
-            <div class="line-card"><div class="line-badge b-bus">221</div><div class="line-title">Regionální Sever</div></div>
-            <div class="line-card"><div class="line-badge b-bus">225</div><div class="line-title">Regionální Jih</div></div>
-            <div class="line-card"><div class="line-badge b-bus">238</div><div class="line-title">Průmyslová zóna</div></div>
-            <div class="line-card"><div class="line-badge b-bus">248</div><div class="line-title">Lesy - Město</div></div>
-            <div class="line-card"><div class="line-badge b-bus">252</div><div class="line-title">Město - Hory</div></div>
-            <div class="line-card"><div class="line-badge b-bus">301</div><div class="line-title">Expres Spoj</div></div>
-            <div class="line-card"><div class="line-badge b-bus">602</div><div class="line-title">Event Linka</div></div>
-        </div>
-    </div>
-
-    <!-- DSZO (ZLÍN) -->
-    <div id="dszo" class="page">
-        <h2 id="t-dszo">DSZO Zlín Lines</h2>
-        <div class="line-grid">
-            <div class="line-card"><div class="line-badge b-trolley">1</div><div class="line-title">Prštné - Lužkovice</div></div>
-            <div class="line-card"><div class="line-badge b-trolley">2</div><div class="line-title">Bartošova - Malenovice</div></div>
-            <div class="line-card"><div class="line-badge b-trolley">6</div><div class="line-title">Jižní Svahy - Otrokovice</div></div>
-            <div class="line-card"><div class="line-badge b-trolley">10</div><div class="line-title">Jižní Svahy - Malenovice</div></div>
-            <div class="line-card"><div class="line-badge b-bus">31</div><div class="line-title">Mír - Jaroslavice</div></div>
-            <div class="line-card"><div class="line-badge b-bus">55</div><div class="line-title">Otrokovice - Štěrkoviště</div></div>
+            <div class="line-card"><div class="badge" style="background:#fff; color:#c00; border:1px solid #c00">201</div><span>Hřbitov ↔ Bílovecká</span></div>
+            <div class="line-card"><div class="badge" style="background:#1976d2">211</div><span>Prasková ↔ Podvihov</span></div>
         </div>
     </div>
 
     <!-- ODKAZY -->
     <div id="odkazy" class="page">
-        <h2 id="t-odk">Odkazy</h2>
-        <a href="https://discord.gg/beSUmraDMC" class="links-btn" target="_blank">Discord vCompany</a>
-        <a href="https://youtube.com/@petrsplayscz" class="links-btn" target="_blank">YouTube PetrSPlaysCZ</a>
+        <h2 id="t-odk-title">Odkazy</h2>
+        <a href="https://discord.gg/RaJNFJjkE" class="links-btn dpo-link" target="_blank">Discord DPO vCompany</a>
+        <a href="https://discord.gg/beSUmraDMC" class="links-btn vco-link" target="_blank">Discord vCompany</a>
+        
+        <div class="rating-box category">
+            <h3 id="t-rate">Hodnocení webu</h3>
+            <div class="stars">
+                <span onclick="rate(1)">★</span><span onclick="rate(2)">★</span><span onclick="rate(3)">★</span><span onclick="rate(4)">★</span><span onclick="rate(5)">★</span>
+            </div>
+            <p id="rate-msg"></p>
+        </div>
     </div>
+
 </div>
 
 <footer>&copy; 2026 DSZO & MDPO vCompany</footer>
 
 <script>
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
-        document.getElementById(pageId).classList.add('active');
-        document.getElementById('btn-' + pageId.substring(0,3)).classList.add('active-nav');
-    }
-
     const translations = {
-        'cz': { 't-voz': 'Vozový park', 't-mdpo': 'MDPO Linky', 't-ing': 'INGAME Linky', 't-dszo': 'DSZO Linky' },
-        'bg': { 't-voz': 'Автопарк', 't-mdpo': 'MDPO Линии', 't-ing': 'INGAME Линии', 't-dszo': 'DSZO Линии' },
-        'it': { 't-voz': 'Parco veicoli', 't-mdpo': 'Linee MDPO', 't-ing': 'Linee INGAME', 't-dszo': 'Linee DSZO' }
-        // ... ostatní jazyky zůstávají v kódu stejně
+        'cz': { 'nav-mdpo': 'MDPO Linky', 'nav-ing': 'INGAME Linky', 'nav-dszo': 'DSZO Linky', 'nav-voz': 'Vozovna', 'nav-odk': 'Odkazy', 't-voz-title': 'Vozový park', 't-trol': 'Trolejbusy', 't-bus': 'Autobusy', 't-rate': 'Hodnocení webu' },
+        'sk': { 'nav-mdpo': 'MDPO Linky', 'nav-ing': 'INGAME Linky', 'nav-dszo': 'DSZO Linky', 'nav-voz': 'Vozovňa', 'nav-odk': 'Odkazy', 't-voz-title': 'Vozový park', 't-trol': 'Trolejbusy', 't-bus': 'Autobusy', 't-rate': 'Hodnotenie webu' },
+        'ua': { 'nav-mdpo': 'Лінії MDPO', 'nav-ing': 'Лінії INGAME', 'nav-dszo': 'Лінії DSZO', 'nav-voz': 'Депо', 'nav-odk': 'Посилання', 't-voz-title': 'Автопарк', 't-trol': 'Тролейбуси', 't-bus': 'Автобуси', 't-rate': 'Рейтинг сайту' },
+        'en': { 'nav-mdpo': 'MDPO Lines', 'nav-ing': 'INGAME Lines', 'nav-dszo': 'DSZO Lines', 'nav-voz': 'Depot', 'nav-odk': 'Links', 't-voz-title': 'Fleet', 't-trol': 'Trolleybuses', 't-bus': 'Buses', 't-rate': 'Rate Website' },
+        'es': { 'nav-mdpo': 'Líneas MDPO', 'nav-ing': 'Líneas INGAME', 'nav-dszo': 'Líneas DSZO', 'nav-voz': 'Depósito', 'nav-odk': 'Enlaces', 't-voz-title': 'Flota', 't-trol': 'Trolebuses', 't-bus': 'Autobuses', 't-rate': 'Votar sitio' },
+        'de': { 'nav-mdpo': 'MDPO Linien', 'nav-ing': 'INGAME Linien', 'nav-dszo': 'DSZO Linien', 'nav-voz': 'Fuhrpark', 'nav-odk': 'Links', 't-voz-title': 'Wagenpark', 't-trol': 'Oberleitungsbusse', 't-bus': 'Busse', 't-rate': 'Bewerten' },
+        'it': { 'nav-mdpo': 'Linee MDPO', 'nav-ing': 'Linee INGAME', 'nav-dszo': 'Linee DSZO', 'nav-voz': 'Deposito', 'nav-odk': 'Link', 't-voz-title': 'Parco Veicoli', 't-trol': 'Filobus', 't-bus': 'Autobus', 't-rate': 'Valuta' },
+        'bg': { 'nav-mdpo': 'MDPO Линии', 'nav-ing': 'INGAME Линии', 'nav-dszo': 'DSZO Линии', 'nav-voz': 'Депо', 'nav-odk': 'Връзки', 't-voz-title': 'Автопарк', 't-trol': 'Тролейбуси', 't-bus': 'Автобуси', 't-rate': 'Оценка' }
     };
 
     function setLanguage(lang) {
         const t = translations[lang];
-        if(!t) return;
-        for (let key in t) {
-            const el = document.getElementById(key);
-            if (el) el.innerText = t[key];
-        }
+        Object.keys(t).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = t[id];
+        });
+        // Speciální oprava pro titulky v sekcích
+        const sectionTitles = { 'mdpo': 't-mdpo-title', 'ingame': 't-ing-title', 'dszo': 't-dszo-title', 'odkazy': 't-odk-title' };
+        // (Zde lze doplnit další dynamické překlady)
     }
-    // Set default nav
-    document.getElementById('btn-mdp').classList.add('active-nav');
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav'));
+        document.getElementById(pageId).classList.add('active');
+        document.getElementById('nav-' + pageId.substring(0,3)).classList.add('active-nav');
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+    }
+
+    function changeBrightness(val) {
+        document.documentElement.style.setProperty('--brightness', val + '%');
+    }
+
+    function rate(n) {
+        const stars = document.querySelectorAll('.stars span');
+        stars.forEach((s, i) => s.classList.toggle('star-active', i < n));
+        document.getElementById('rate-msg').innerText = "Děkujeme za hodnocení: " + n + "/5";
+    }
 </script>
+
 </body>
 </html>
