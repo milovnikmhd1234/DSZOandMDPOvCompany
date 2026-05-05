@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDPO & DSZO | Nid’s Buses & Trams</title>
+    <title>MDPO & DSZO | vCompany</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,7 +11,7 @@
             color: #ffffff;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            line-height: 1.4;
         }
 
         /* Jazyková lišta */
@@ -24,23 +24,19 @@
             border-bottom: 2px solid #d32f2f;
         }
 
-        .lang-bar span {
-            cursor: pointer;
-            font-size: 1.3em;
-            transition: 0.2s;
-        }
-
+        .lang-bar span { cursor: pointer; font-size: 1.2em; transition: 0.2s; }
         .lang-bar span:hover { transform: scale(1.2); }
 
         header {
             background-color: #d32f2f;
-            padding: 25px;
+            padding: 20px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         nav {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             background-color: #333;
             position: sticky;
@@ -52,9 +48,9 @@
             background: none;
             border: none;
             color: white;
-            padding: 15px 25px;
+            padding: 12px 18px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 0.95em;
             font-weight: bold;
             transition: 0.3s;
         }
@@ -62,7 +58,7 @@
         nav button:hover { background-color: #d32f2f; }
 
         .container {
-            max-width: 950px;
+            max-width: 1000px;
             margin: 20px auto;
             padding: 20px;
             background-color: #262626;
@@ -72,46 +68,42 @@
         .page { display: none; }
         .active { display: block; }
 
-        h2 { border-bottom: 2px solid #d32f2f; padding-bottom: 10px; margin-top: 0; }
+        h2 { border-bottom: 2px solid #d32f2f; padding-bottom: 8px; margin-top: 0; color: #ff5252; }
+        h3 { margin-bottom: 10px; color: #ddd; border-left: 3px solid #d32f2f; padding-left: 10px; }
 
         .category {
             background: #333;
             padding: 15px;
             border-radius: 8px;
-            border-left: 5px solid #d32f2f;
             margin-bottom: 20px;
         }
 
-        /* Styl pro seznam linek se směry */
         .line-row {
             display: flex;
             align-items: center;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #444;
         }
 
         .line-badge {
-            width: 55px;
-            height: 35px;
+            width: 50px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             border-radius: 4px;
-            margin-right: 15px;
+            margin-right: 12px;
             flex-shrink: 0;
+            font-size: 0.9em;
         }
 
-        .trolley { background-color: #fbc02d; color: black; }
-        .bus { background-color: #1976d2; color: white; }
+        /* Barvy linek */
+        .trolley-dszo { background-color: #fbc02d; color: black; }
+        .bus-real { background-color: #1976d2; color: white; }
+        .trolley-mdpo { background-color: #ffffff; color: #cc0000; border: 1px solid #cc0000; }
 
-        .line-direction { font-size: 0.95em; }
-
-        .vehicle-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        .line-direction { font-size: 0.9em; }
 
         .links a {
             display: block;
@@ -125,11 +117,7 @@
             font-weight: bold;
         }
 
-        footer { text-align: center; padding: 30px; font-size: 0.85em; color: #aaa; }
-
-        @media (max-width: 750px) {
-            .vehicle-grid { grid-template-columns: 1fr; }
-        }
+        footer { text-align: center; padding: 20px; font-size: 0.8em; color: #888; }
     </style>
 </head>
 <body>
@@ -143,139 +131,111 @@
 </div>
 
 <header>
-    <h1>MDPO & DSZO</h1>
-    <p id="sub-title">vCompany v rámci Roblox Nid’s Buses & Trams</p>
+    <h1>MDPO & DSZO | vCompany</h1>
 </header>
 
 <nav>
-    <button onclick="showPage('vozovna')" id="btn-vozovna">Vozovna</button>
-    <button onclick="showPage('linky')" id="btn-linky">Linky</button>
-    <button onclick="showPage('odkazy')" id="btn-odkazy">Odkazy</button>
+    <button onclick="showPage('vozovna')" id="nav-voz">Vozovna</button>
+    <button onclick="showPage('ingame')" id="nav-ing">INGAME Lines</button>
+    <button onclick="showPage('mdpo')" id="nav-mdpo">MDPO Lines</button>
+    <button onclick="showPage('dszo')" id="nav-dszo">DSZO Lines</button>
+    <button onclick="showPage('odkazy')" id="nav-odk">Odkazy</button>
 </nav>
 
 <div class="container">
     
     <!-- VOZOVNA -->
     <div id="vozovna" class="page active">
-        <h2 id="title-vozovna">Vozový park</h2>
-        <div class="vehicle-grid">
-            <div class="category">
-                <h3 id="cat-solo">Standardní vozy (Solo)</h3>
-                <ul id="list-solo">
-                    <li>Škoda 14tr</li>
-                    <li>Škoda 26tr (Solaris III)</li>
-                    <li>Škoda 26tr (Solaris IV)</li>
-                    <li>SOR BN12</li>
-                    <li>Karosa B951E</li>
-                    <li>Solaris Urbino 12 III</li>
-                    <li>Solaris Urbino 15 II</li>
-                    <li>Solaris Urbino 10.5 IV</li>
-                </ul>
-            </div>
-            <div class="category">
-                <h3 id="cat-artic">Kloubové vozy</h3>
-                <ul id="list-artic">
-                    <li>Škoda 15tr</li>
-                    <li>Škoda 27 Tr (Solaris III)</li>
-                    <li>Škoda 27 Tr (Solaris IV)</li>
-                    <li>Solaris Urbino 18 III</li>
-                    <li>Solaris Urbino 18 IV</li>
-                </ul>
-            </div>
+        <h2 id="t-voz">Vozový park</h2>
+        <p>Seznam modelů používaných ve vCompany.</p>
+        <div class="category">
+            <h3>Standardní a Kloubové vozy</h3>
+            <p>Škoda 14tr, 15tr, 26tr, 27tr, SOR BN12, Karosa B951E, Solaris Urbino 10.5, 12, 15, 18.</p>
         </div>
     </div>
 
-    <!-- LINKY -->
-    <div id="linky" class="page">
-        <h2 id="title-linky">Provozované linky</h2>
+    <!-- INGAME LINES (Roblox) -->
+    <div id="ingame" class="page">
+        <h2>INGAME Lines (Roblox)</h2>
+        <div class="category">
+            <h3>Trolejbusy</h3>
+            <div class="line-row"><div class="line-badge trolley-dszo">20</div><div class="line-direction">Nádraží ↔ Sportovní hala</div></div>
+            <div class="line-row"><div class="line-badge trolley-dszo">21</div><div class="line-direction">Nemocnice ↔ Sídliště Střed</div></div>
+            <div class="line-row"><div class="line-badge trolley-dszo">22</div><div class="line-direction">Centrum ↔ Sídliště Sever</div></div>
+            <div class="line-row"><div class="line-badge trolley-dszo">23</div><div class="line-direction">Vozovna ↔ Průmyslová zóna</div></div>
+            <div class="line-row"><div class="line-badge trolley-dszo">24</div><div class="line-direction">Hlavní náměstí ↔ Univerzita</div></div>
+        </div>
+        <div class="category">
+            <h3>Autobusy</h3>
+            <div class="line-direction">A1, A2, A3, A10, 100, 128, 139, 151, 159, 164, 169, 173, 178, 221, 225, 238, 248, 252, 301, 602</div>
+        </div>
+    </div>
+
+    <!-- MDPO LINES -->
+    <div id="mdpo" class="page">
+        <h2>MDPO Lines (Opava - Real)</h2>
         
         <div class="category">
-            <h3 id="label-trol">Trolejbusy</h3>
-            <div class="line-row"><div class="line-badge trolley">20</div><div class="line-direction">Nádraží ↔ Sportovní hala</div></div>
-            <div class="line-row"><div class="line-badge trolley">21</div><div class="line-direction">Nemocnice ↔ Sídliště Střed</div></div>
-            <div class="line-row"><div class="line-badge trolley">22</div><div class="line-direction">Centrum ↔ Sídliště Sever</div></div>
-            <div class="line-row"><div class="line-badge trolley">23</div><div class="line-direction">Vozovna ↔ Průmyslová zóna</div></div>
-            <div class="line-row"><div class="line-badge trolley">24</div><div class="line-direction">Hlavní náměstí ↔ Univerzita</div></div>
+            <h3>Trolejbusy MDPO</h3>
+            <div class="line-row"><div class="line-badge trolley-mdpo">201</div><div class="line-direction">Městský Hřbitov ↔ Kylešovice Bílovecká</div></div>
+            <div class="line-row"><div class="line-badge trolley-mdpo">202</div><div class="line-direction">Kateřinky ↔ Albert Hypermarket</div></div>
+            <div class="line-row"><div class="line-badge trolley-mdpo">203</div><div class="line-direction">Globus ↔ Jaktař</div></div>
+            <div class="line-row"><div class="line-badge trolley-mdpo">204</div><div class="line-direction">Englišova ↔ Kylešovice škola</div></div>
         </div>
 
         <div class="category">
-            <h3 id="label-bus">Autobusy</h3>
-            <div class="line-row"><div class="line-badge bus">A1</div><div class="line-direction">Expres: Letiště ↔ Centrum</div></div>
-            <div class="line-row"><div class="line-badge bus">A2</div><div class="line-direction">Nádraží ↔ Nákupní centrum</div></div>
-            <div class="line-row"><div class="line-badge bus">A3</div><div class="line-direction">Přístaviště ↔ Staré město</div></div>
-            <div class="line-row"><div class="line-badge bus">A10</div><div class="line-direction">Noční linka: Okruh městem</div></div>
-            <div class="line-row"><div class="line-badge bus">100</div><div class="line-direction">Hlavní nádraží ↔ Sídliště Jih</div></div>
-            <div class="line-row"><div class="line-badge bus">128</div><div class="line-direction">Zámek ↔ Předměstí</div></div>
-            <div class="line-row"><div class="line-badge bus">139</div><div class="line-direction">Základní škola ↔ Lesní čtvrť</div></div>
-            <div class="line-row"><div class="line-badge bus">151</div><div class="line-direction">Autobusové nádraží ↔ Vesnice</div></div>
-            <div class="line-row"><div class="line-badge bus">159</div><div class="line-direction">Centrální park ↔ Průmyslová</div></div>
-            <div class="line-row"><div class="line-badge bus">164</div><div class="line-direction">Hřbitov ↔ Obchodní zóna</div></div>
-            <div class="line-row"><div class="line-badge bus">169</div><div class="line-direction">Sídliště Východ ↔ Technické muzeum</div></div>
-            <div class="line-row"><div class="line-badge bus">173</div><div class="line-direction">Přehrada ↔ Centrum</div></div>
-            <div class="line-row"><div class="line-badge bus">178</div><div class="line-direction">Nádraží ↔ Zoologická zahrada</div></div>
-            <div class="line-row"><div class="line-badge bus">221</div><div class="line-direction">Městský okruh (Linka A)</div></div>
-            <div class="line-row"><div class="line-badge bus">225</div><div class="line-direction">Městský okruh (Linka B)</div></div>
-            <div class="line-row"><div class="line-badge bus">238</div><div class="line-direction">Sídliště Západ ↔ Stadion</div></div>
-            <div class="line-row"><div class="line-badge bus">248</div><div class="line-direction">Výstaviště ↔ Hotel Grand</div></div>
-            <div class="line-row"><div class="line-badge bus">252</div><div class="line-direction">Regionální linka: Město ↔ Hory</div></div>
-            <div class="line-row"><div class="line-badge bus">301</div><div class="line-direction">Školní spoj: Sídliště ↔ Gymnázium</div></div>
-            <div class="line-row"><div class="line-badge bus">602</div><div class="line-direction">Zaměstnanecký svoz: Depo ↔ Továrna</div></div>
+            <h3>Autobusy MDPO (Všechny linky)</h3>
+            <div class="line-row"><div class="line-badge bus-real">211</div><div class="line-direction">Englišova ↔ Kateřinky, sev. obchvat</div></div>
+            <div class="line-row"><div class="line-badge bus-real">212</div><div class="line-direction">Albert ↔ Kateřinky</div></div>
+            <div class="line-row"><div class="line-badge bus-real">213</div><div class="line-direction">Východní nádraží ↔ Kylešovice</div></div>
+            <div class="line-row"><div class="line-badge bus-real">214</div><div class="line-direction">Opava, východní nádr. ↔ Kateřinky</div></div>
+            <div class="line-row"><div class="line-badge bus-real">215</div><div class="line-direction">Opava, východní nádr. ↔ Bruntálská</div></div>
+            <div class="line-row"><div class="line-badge bus-real">216</div><div class="line-direction">Opava, východní nádr. ↔ Městský hřbitov</div></div>
+            <div class="line-row"><div class="line-badge bus-real">217</div><div class="line-direction">Opava, východní nádr. ↔ Kylešovice, škola</div></div>
+            <div class="line-row"><div class="line-badge bus-real">218</div><div class="line-direction">Opava, východní nádr. ↔ Malé Hoštice</div></div>
+            <div class="line-row"><div class="line-badge bus-real">219</div><div class="line-direction">Opava, východní nádr. ↔ Suché Lazce / Podvihov</div></div>
+            <div class="line-row"><div class="line-badge bus-real">220</div><div class="line-direction">Opava, východní nádr. ↔ Chvalíkovice</div></div>
+            <div class="line-row"><div class="line-badge bus-real">221</div><div class="line-direction">Kylešovice ↔ Vávrovice / Držkovice</div></div>
+            <div class="line-row"><div class="line-badge bus-real">222</div><div class="line-direction">Opava, východní nádr. ↔ Kateřinky, sev. obchvat</div></div>
+            <div class="line-row"><div class="line-badge bus-real">223</div><div class="line-direction">Opava, východní nádr. ↔ Zlatníky</div></div>
+            <div class="line-row"><div class="line-badge bus-real">228</div><div class="line-direction">Školní linka</div></div>
+            <div class="line-row"><div class="line-badge bus-real">229</div><div class="line-direction">Opava ↔ Milostovice</div></div>
+        </div>
+    </div>
+
+    <!-- DSZO LINES -->
+    <div id="dszo" class="page">
+        <h2>DSZO Lines (Zlín - Real)</h2>
+        <div class="category">
+            <h3>Trolejbusy</h3>
+            <div class="line-row"><div class="line-badge trolley-dszo">1</div><div class="line-direction">Prštné ↔ Lužkovice</div></div>
+            <div class="line-row"><div class="line-badge trolley-dszo">2</div><div class="line-direction">Bartošova čtvrť ↔ Malenovice</div></div>
+            <div class="line-row"><div class="line-badge trolley-dszo">6</div><div class="line-direction">Jižní Svahy ↔ Otrokovice, žst.</div></div>
         </div>
     </div>
 
     <!-- ODKAZY -->
     <div id="odkazy" class="page">
-        <h2 id="title-odkazy">Důležité odkazy</h2>
+        <h2 id="t-odk">Odkazy</h2>
         <div class="links">
-            <a href="https://discord.gg/beSUmraDMC" target="_blank" id="lnk-main">Hlavní Discord (vCompany)</a>
-            <a href="https://discord.gg/eb6h3F2uwt" target="_blank" id="lnk-dpo">DPO Discord</a>
-            <a href="https://youtube.com/@petrsplayscz?si=NpLsBUAwQQmAnhcE" target="_blank">YouTube: PetrSPlaysCZ</a>
+            <a href="https://discord.gg/beSUmraDMC" target="_blank">Discord vCompany</a>
+            <a href="https://youtube.com/@petrsplayscz" target="_blank">YouTube PetrSPlaysCZ</a>
         </div>
     </div>
 
 </div>
 
-<footer id="footer-text">
+<footer>
     &copy; 2026 MDPO & DSZO vCompany.
 </footer>
 
 <script>
     const translations = {
-        'cz': {
-            'btn-vozovna': 'Vozovna', 'btn-linky': 'Linky', 'btn-odkazy': 'Odkazy',
-            'title-vozovna': 'Vozový park', 'cat-solo': 'Standardní vozy (Solo)', 'cat-artic': 'Kloubové vozy',
-            'title-linky': 'Seznam linek', 'label-trol': 'Trolejbusy', 'label-bus': 'Autobusy',
-            'title-odkazy': 'Důležité odkazy', 'lnk-main': 'Hlavní Discord (vCompany)', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2026 MDPO & DSZO vCompany. Vytvořeno pro komunitu Nid’s Buses & Trams.'
-        },
-        'en-gb': {
-            'btn-vozovna': 'Depot', 'btn-linky': 'Lines', 'btn-odkazy': 'Links',
-            'title-vozovna': 'Vehicle Fleet', 'cat-solo': 'Standard Buses', 'cat-artic': 'Articulated Buses',
-            'title-linky': 'Line List', 'label-trol': 'Trolleybuses', 'label-bus': 'Buses',
-            'title-odkazy': 'Important Links', 'lnk-main': 'Main Discord', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2026 MDPO & DSZO vCompany. Made for Nid’s Buses & Trams.'
-        },
-        'en-us': {
-            'btn-vozovna': 'Garage', 'btn-linky': 'Routes', 'btn-odkazy': 'Links',
-            'title-vozovna': 'Fleet', 'cat-solo': 'Standard (Solo)', 'cat-artic': 'Articulated',
-            'title-linky': 'Routes', 'label-trol': 'Trolleybuses', 'label-bus': 'Buses',
-            'title-odkazy': 'Important Links', 'lnk-main': 'Main Discord', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2026 MDPO & DSZO vCompany. Built for Nid’s Buses & Trams.'
-        },
-        'pl': {
-            'btn-vozovna': 'Zajezdnia', 'btn-linky': 'Linie', 'btn-odkazy': 'Linki',
-            'title-vozovna': 'Tabor', 'cat-solo': 'Solo', 'cat-artic': 'Przegubowe',
-            'title-linky': 'Linie', 'label-trol': 'Trolejbusy', 'label-bus': 'Autobusy',
-            'title-odkazy': 'Linki', 'lnk-main': 'Główny Discord', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2026 MDPO & DSZO vCompany. Dla społeczności Nid’s Buses & Trams.'
-        },
-        'de': {
-            'btn-vozovna': 'Betriebshof', 'btn-linky': 'Linien', 'btn-odkazy': 'Links',
-            'title-vozovna': 'Fahrzeugpark', 'cat-solo': 'Standardwagen', 'cat-artic': 'Gelenkwagen',
-            'title-linky': 'Liniennetz', 'label-trol': 'Obusse', 'label-bus': 'Busse',
-            'title-odkazy': 'Wichtige Links', 'lnk-main': 'Haupt Discord', 'lnk-dpo': 'DPO Discord',
-            'footer-text': '© 2026 MDPO & DSZO vCompany. Erstellt für Nid’s Buses & Trams.'
-        }
+        'cz': { 'nav-voz': 'Vozovna', 'nav-ing': 'INGAME Linky', 'nav-mdpo': 'MDPO Linky', 'nav-dszo': 'DSZO Linky', 'nav-odk': 'Odkazy' },
+        'en-gb': { 'nav-voz': 'Depot', 'nav-ing': 'INGAME Lines', 'nav-mdpo': 'MDPO Lines', 'nav-dszo': 'DSZO Lines', 'nav-odk': 'Links' },
+        'en-us': { 'nav-voz': 'Garage', 'nav-ing': 'INGAME Lines', 'nav-mdpo': 'MDPO Lines', 'nav-dszo': 'DSZO Lines', 'nav-odk': 'Links' },
+        'pl': { 'nav-voz': 'Zajezdnia', 'nav-ing': 'Linie INGAME', 'nav-mdpo': 'Linie MDPO', 'nav-dszo': 'Linie DSZO', 'nav-odk': 'Linki' },
+        'de': { 'nav-voz': 'Depot', 'nav-ing': 'INGAME Linien', 'nav-mdpo': 'MDPO Linien', 'nav-dszo': 'DSZO Linien', 'nav-odk': 'Links' }
     };
 
     function setLanguage(lang) {
@@ -288,7 +248,7 @@
 
     function showPage(pageId) {
         const pages = document.querySelectorAll('.page');
-        pages.forEach(page => page.classList.remove('active'));
+        pages.forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
     }
 </script>
