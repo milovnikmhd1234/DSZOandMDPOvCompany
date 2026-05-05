@@ -3,583 +3,733 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vCompany Administrative System v4.0</title>
+    <title>vCompany Administrative Master System 2026</title>
+    <!-- Import moderního fontu -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        /* --- KASKÁDOVÉ STYLY (CSS) --- */
         :root {
-            --primary: #d32f2f;
-            --primary-dark: #b71c1c;
-            --bg-dark: #0d1117;
-            --card-dark: #161b22;
-            --text-dark: #c9d1d9;
-            --bg-light: #f6f8fa;
-            --card-light: #ffffff;
-            --text-light: #24292f;
+            --primary: #ff3e3e;
+            --primary-hover: #ff5e5e;
+            --bg: #05070a;
+            --card-bg: #0f1218;
+            --nav-bg: rgba(10, 12, 16, 0.95);
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --accent: #00d4ff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
             --brightness: 100%;
-            --transition: all 0.3s ease;
+            --font-size-base: 16px;
+        }
+
+        .light-theme {
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --text: #1a1a1a;
+            --text-dim: #555555;
+            --glass: rgba(0, 0, 0, 0.02);
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             filter: brightness(var(--brightness));
-            transition: var(--transition);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
         }
 
-        body.light-mode {
-            background-color: var(--bg-light);
-            color: var(--text-light);
-        }
-
-        /* --- NAVIGACE --- */
+        /* --- NAVIGATION --- */
         .navbar {
+            position: fixed;
+            top: 0; width: 100%;
+            height: 70px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: #000;
-            padding: 10px 25px;
-            border-bottom: 3px solid var(--primary);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 9999;
         }
 
-        .nav-brand {
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: var(--primary);
-            letter-spacing: 1px;
-        }
-
-        .nav-menu {
+        .logo-area {
             display: flex;
+            align-items: center;
             gap: 15px;
         }
 
-        .nav-link {
-            background: none;
-            border: none;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 5px;
-            transition: var(--transition);
+        .logo-text {
+            font-weight: 900;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-links {
+            display: flex;
+            gap: 5px;
+        }
+
+        .nav-links button {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+
+        .nav-links button.active {
             background: var(--primary);
             color: white;
+            box-shadow: 0 4px 15px rgba(255, 62, 62, 0.3);
         }
 
-        .settings-trigger {
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: white;
-            transition: transform 0.4s;
+        .nav-links button:hover:not(.active) {
+            background: var(--glass);
         }
 
-        .settings-trigger:hover { transform: rotate(90deg); }
+        .nav-tools {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .real-time-clock {
+            font-family: monospace;
+            font-weight: bold;
+            color: var(--accent);
+            background: rgba(0, 212, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
 
         /* --- SETTINGS PANEL --- */
-        .settings-panel {
+        #settingsMenu {
             position: fixed;
-            top: 65px;
-            right: 20px;
-            background: var(--card-dark);
-            border: 1px solid var(--primary);
-            border-radius: 12px;
-            padding: 20px;
-            width: 300px;
+            top: 80px; right: 20px;
+            width: 350px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             display: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-            z-index: 1001;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
         }
 
-        .light-mode .settings-panel {
-            background: var(--card-light);
-            color: var(--text-light);
-        }
+        @keyframes slideIn { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform: scale(1); } }
 
-        .settings-panel.open { display: block; animation: slideDown 0.3s ease; }
+        .setting-group { margin-bottom: 25px; }
+        .setting-group label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 10px; font-weight: bold; text-transform: uppercase; }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .lang-selector {
+        .lang-picker {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 10px;
-            margin-top: 15px;
         }
 
-        .lang-flag {
+        .lang-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
             cursor: pointer;
-            font-size: 1.4rem;
-            transition: transform 0.2s;
+            font-size: 1.2rem;
             text-align: center;
         }
 
-        .lang-flag:hover { transform: scale(1.3); }
-
-        /* --- OBSAH --- */
-        header {
+        /* --- HEADER SECTION --- */
+        .hero {
+            padding: 160px 20px 80px;
             text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1200');
-            background-size: cover;
-            background-position: center;
+            background: radial-gradient(circle at top, rgba(255, 62, 62, 0.1), transparent);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -2px;
+        }
+
+        .search-wrapper {
+            max-width: 700px;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 20px 30px;
+            border-radius: 50px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             color: white;
+            font-size: 1.1rem;
+            outline: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
+        .search-bar:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(255, 62, 62, 0.2);
+        }
+
+        /* --- CONTENT AREA --- */
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
         }
 
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.5s ease; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- KARTY LINEK --- */
         .section-title {
-            border-left: 5px solid var(--primary);
-            padding-left: 15px;
-            margin: 40px 0 20px;
+            font-size: 2rem;
+            margin: 60px 0 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            height: 2px;
+            flex-grow: 1;
+            background: var(--border);
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
         }
 
+        /* --- CARDS --- */
         .card {
-            background: var(--card-dark);
-            border-radius: 10px;
-            padding: 20px;
-            transition: var(--transition);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .light-mode .card {
-            background: var(--card-light);
-            border: 1px solid #ddd;
-        }
-
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-
-        .line-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .b-blue { background: #0d47a1; }
-        .b-yellow { background: #fbc02d; color: #000; }
-        .b-purple { background: #6a1b9a; }
-        .b-green { background: #2e7d32; }
-
-        .route-desc {
-            font-size: 0.9rem;
-            color: #8b949e;
-            margin-top: 8px;
-            line-height: 1.4;
-        }
-
-        .light-mode .route-desc { color: #57606a; }
-
-        /* --- VOZOVNA TABULKY --- */
-        .fleet-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: var(--card-dark);
-            border-radius: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 25px;
+            position: relative;
             overflow: hidden;
         }
 
-        .light-mode .fleet-table { background: var(--card-light); }
-
-        .fleet-table th, .fleet-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .light-mode .fleet-table td { border-bottom: 1px solid #eee; }
+        .card-img {
+            width: calc(100% + 50px);
+            height: 200px;
+            margin: -25px -25px 20px -25px;
+            object-fit: cover;
+            background: #222;
+        }
 
-        .fleet-table th {
-            background: var(--primary);
+        .line-badge {
+            position: absolute;
+            top: 20px; right: 20px;
+            padding: 6px 15px;
+            border-radius: 8px;
+            font-weight: 900;
             color: white;
+            font-size: 1.1rem;
+            z-index: 2;
         }
 
-        .tag {
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            background: #333;
-            border-radius: 3px;
-            margin-left: 10px;
+        .b-trolley { background: #f1c40f; color: #000; }
+        .b-bus { background: #2980b9; }
+        .b-tram { background: #27ae60; }
+        .b-spec { background: #8e44ad; }
+
+        .card h3 { margin: 10px 0; font-size: 1.3rem; }
+        .card p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+
+        .route-path {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 600;
         }
+
+        /* --- INFO PAGES --- */
+        .info-box {
+            background: var(--glass);
+            border-radius: 24px;
+            padding: 50px;
+            border: 1px solid var(--border);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .info-box h2 { font-size: 2.5rem; margin-top: 0; }
 
         /* --- FEEDBACK --- */
-        .feedback-box {
-            background: var(--card-dark);
-            padding: 40px;
-            border-radius: 15px;
+        .feedback-form {
             text-align: center;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .stars { font-size: 2.5rem; margin-bottom: 20px; }
-        .star { cursor: pointer; color: #333; transition: 0.2s; }
-        .star.active { color: #ffca28; }
+        .star-rating {
+            font-size: 3rem;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .star { cursor: pointer; transition: 0.2s; }
+        .star.active { color: var(--primary); text-shadow: 0 0 20px rgba(255, 62, 62, 0.5); }
 
         textarea {
             width: 100%;
-            height: 120px;
-            background: #0d1117;
-            border: 1px solid #30363d;
+            height: 180px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
             color: white;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            font-family: inherit;
+            font-size: 1rem;
             margin-bottom: 20px;
-            resize: none;
         }
 
         .btn-submit {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            font-weight: bold;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-weight: 800;
             cursor: pointer;
             width: 100%;
+            font-size: 1.1rem;
         }
 
+        /* --- FOOTER --- */
         footer {
+            padding: 80px 40px;
+            border-top: 1px solid var(--border);
+            background: #000;
             text-align: center;
-            padding: 50px;
-            font-size: 0.8rem;
-            opacity: 0.6;
         }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            text-align: left;
+        }
+
+        .footer-col h4 { text-transform: uppercase; margin-bottom: 20px; color: var(--primary); }
+        .footer-col a { display: block; color: var(--text-dim); text-decoration: none; margin-bottom: 10px; }
+        .footer-col a:hover { color: white; }
+
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; }
+
     </style>
 </head>
 <body>
 
-    <!-- NAVIGACE -->
-    <nav class="navbar">
-        <div class="nav-brand">vCOMPANY SYSTEM</div>
-        <div class="nav-menu">
-            <button class="nav-link active" onclick="showPage('mdpo')" data-i18n="nav-mdpo">MDPO</button>
-            <button class="nav-link" onclick="showPage('dszo')" data-i18n="nav-dszo">DSZO</button>
-            <button class="nav-link" onclick="showPage('ingame')" data-i18n="nav-ingame">INGAME</button>
-            <button class="nav-link" onclick="showPage('fleet')" data-i18n="nav-fleet">Vozovna</button>
-            <button class="nav-link" onclick="showPage('feedback')" data-i18n="nav-feedback">Nápady</button>
+<!-- NAVIGATION BAR -->
+<nav class="navbar">
+    <div class="logo-area">
+        <div class="logo-text">vCompany HUB</div>
+    </div>
+    
+    <div class="nav-links">
+        <button onclick="nav('mdpo')" id="n-mdpo" class="active" data-i18n="nav-mdpo">MDPO Opava</button>
+        <button onclick="nav('dszo')" id="n-dszo" data-i18n="nav-dszo">DSZO Zlín</button>
+        <button onclick="nav('special')" id="n-special" data-i18n="nav-spec">Speciální linky</button>
+        <button onclick="nav('fleet')" id="n-fleet" data-i18n="nav-fleet">Vozovna</button>
+        <button onclick="nav('info')" id="n-info" data-i18n="nav-info">O nás</button>
+        <button onclick="nav('feedback')" id="n-feedback" data-i18n="nav-feed">Nápady</button>
+        <button onclick="nav('links')" id="n-links" data-i18n="nav-links">Odkazy</button>
+    </div>
+
+    <div class="nav-tools">
+        <div class="real-time-clock" id="timer">21:13:57</div>
+        <div style="cursor:pointer; font-size: 1.4rem" onclick="toggleSettings()">⚙️</div>
+    </div>
+</nav>
+
+<!-- SETTINGS MENU -->
+<div id="settingsMenu">
+    <h2 data-i18n="set-h">Nastavení systému</h2>
+    
+    <div class="setting-group">
+        <label data-i18n="set-theme">Vizuální režim</label>
+        <button class="btn-submit" onclick="toggleTheme()" style="padding:10px">Dark / Light Toggle</button>
+    </div>
+
+    <div class="setting-group">
+        <label data-i18n="set-bright">Jas obrazovky</label>
+        <input type="range" min="40" max="150" value="100" style="width:100%" oninput="adjustBrightness(this.value)">
+    </div>
+
+    <div class="setting-group">
+        <label data-i18n="set-font">Velikost písma</label>
+        <input type="range" min="14" max="22" value="16" style="width:100%" oninput="adjustFont(this.value)">
+    </div>
+
+    <div class="setting-group">
+        <label data-i18n="set-lang">Jazyk rozhraní</label>
+        <div class="lang-picker">
+            <div class="lang-btn" onclick="changeLang('cs')">🇨🇿</div>
+            <div class="lang-btn" onclick="changeLang('sk')">🇸🇰</div>
+            <div class="lang-btn" onclick="changeLang('en')">🇬🇧</div>
+            <div class="lang-btn" onclick="changeLang('de')">🇩🇪</div>
+            <div class="lang-btn" onclick="changeLang('pl')">🇵🇱</div>
+            <div class="lang-btn" onclick="changeLang('ua')">🇺🇦</div>
+            <div class="lang-btn" onclick="changeLang('fr')">🇫🇷</div>
+            <div class="lang-btn" onclick="changeLang('es')">🇪🇸</div>
+            <div class="lang-btn" onclick="changeLang('it')">🇮🇹</div>
+            <div class="lang-btn" onclick="changeLang('bg')">🇧🇬</div>
         </div>
-        <div class="settings-trigger" onclick="toggleSettings()">⚙️</div>
-    </nav>
+    </div>
+</div>
 
-    <!-- SETTINGS PANEL -->
-    <div class="settings-panel" id="settingsPanel">
-        <h3 data-i18n="set-header">Nastavení systému</h3>
-        <label data-i18n="set-mode">Režim zobrazení:</label>
-        <button class="btn-submit" style="margin: 10px 0;" onclick="toggleTheme()" data-i18n="set-theme-btn">Dark / Light Mode</button>
-        
-        <label data-i18n="set-bright">Úroveň jasu:</label>
-        <input type="range" min="30" max="150" value="100" style="width:100%;" oninput="changeBrightness(this.value)">
+<!-- HERO SECTION -->
+<header class="hero">
+    <h1 data-i18n="hero-h">MDPO & DSZO Management</h1>
+    <p style="color: var(--text-dim); max-width: 600px; margin: 20px auto;" data-i18n="hero-p">
+        Centrální správa virtuální dopravy. Sledujte linky, vozidla a podílejte se na rozvoji komunity.
+    </p>
+    
+    <div class="search-wrapper">
+        <input type="text" class="search-bar" id="mainSearch" placeholder="Hledejte linku (např. 201), zastávku nebo typ vozu..." onkeyup="doSearch()">
+    </div>
+</header>
 
-        <label data-i18n="set-lang" style="display:block; margin-top:15px;">Jazyk systému:</label>
-        <div class="lang-selector">
-            <span class="lang-flag" onclick="setLanguage('cz')">🇨🇿</span>
-            <span class="lang-flag" onclick="setLanguage('sk')">🇸🇰</span>
-            <span class="lang-flag" onclick="setLanguage('en')">🇬🇧</span>
-            <span class="lang-flag" onclick="setLanguage('de')">🇩🇪</span>
-            <span class="lang-flag" onclick="setLanguage('ua')">🇺🇦</span>
-            <span class="lang-flag" onclick="setLanguage('pl')">🇵🇱</span>
-            <span class="lang-flag" onclick="setLanguage('fr')">🇫🇷</span>
-            <span class="lang-flag" onclick="setLanguage('es')">🇪🇸</span>
-            <span class="lang-flag" onclick="setLanguage('it')">🇮🇹</span>
-            <span class="lang-flag" onclick="setLanguage('bg')">🇧🇬</span>
+<div class="container">
+
+    <!-- PAGE: MDPO OPAVA -->
+    <div id="mdpo" class="page active">
+        <h2 class="section-title" data-i18n="mdpo-t">Městský dopravní podnik Opava</h2>
+        <div class="grid">
+            <!-- Trolejbusy -->
+            <div class="card" data-search="201 hřbitov bílovecká trolejbus">
+                <div class="line-badge b-trolley">201</div>
+                <h3>Městský hřbitov ↔ Bílovecká</h3>
+                <p>Páteřní trolejbusová linka spojující východní a západní část města.</p>
+                <div class="route-path">Albert — Divadlo — Východní nádraží</div>
+            </div>
+            <div class="card" data-search="202 albert kateřinky trolejbus">
+                <div class="line-badge b-trolley">202</div>
+                <h3>Albert ↔ Kateřinky</h3>
+                <p>Klíčová linka obsluhující sídliště Kateřinky a nemocnici.</p>
+                <div class="route-path">Nemocnice — Horní náměstí — Ratibořská</div>
+            </div>
+            <div class="card" data-search="203 jaktař globus trolejbus">
+                <div class="line-badge b-trolley">203</div>
+                <h3>Jaktař ↔ Globus</h3>
+                <p>Spojení okrajové části Jaktař s nákupní zónou sever.</p>
+                <div class="route-path">Radnice — Zimní stadion — Olomoucká</div>
+            </div>
+            <div class="card" data-search="204 englišova kylešovice trolejbus">
+                <div class="line-badge b-trolley">204</div>
+                <h3>Englišova ↔ Kylešovice</h3>
+                <p>Obsluha školních areálů a jižního sektoru města.</p>
+                <div class="route-path">Slezská univerzita — Škola — Kylešovice</div>
+            </div>
+            <!-- Autobusy -->
+            <div class="card" data-search="211 prasková podvihov autobus">
+                <div class="line-badge b-bus">211</div>
+                <h3>Prasková ↔ Podvihov</h3>
+                <p>Dálková městská linka do příměstských částí.</p>
+                <div class="route-path">Anenská — Ostroj — Komárov</div>
+            </div>
+            <div class="card" data-search="215 globus liliová autobus">
+                <div class="line-badge b-bus">215</div>
+                <h3>Globus ↔ Liliová</h3>
+                <p>Obsluha rezidenční čtvrti Liliová a napojení na Globus.</p>
+                <div class="route-path">Nákupní centrum — Pekařská — Liliová</div>
+            </div>
+            <div class="card" data-search="222 raduň podvihov autobus">
+                <div class="line-badge b-bus">222</div>
+                <h3>Raduň ↔ Podvihov</h3>
+                <p>Spojovací linka mezi jihozápadními obcemi.</p>
+                <div class="route-path">Zámek Raduň — Chvalíkovice — Podvihov</div>
+            </div>
         </div>
     </div>
 
-    <header>
-        <h1 data-i18n="head-title">DSZO & MDPO Management</h1>
-        <p data-i18n="head-sub">Virtuální dopravní dispečink a informační systém</p>
-    </header>
-
-    <div class="container">
-
-        <!-- MDPO STRÁNKA -->
-        <div id="mdpo" class="page active">
-            <h2 class="section-title" data-i18n="mdpo-bus-title">MDPO - Autobusové linky</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="line-badge b-blue">211</div>
-                    <strong data-i18n="l211-name">Prasková → Podvihov, Na Nové</strong>
-                    <div class="route-desc" data-i18n="l211-desc">Prasková → Anenská → Těšínská → Jatky → Ostroj → Papírny → Globus → Komárov → Podvihov</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">212</div>
-                    <strong data-i18n="l212-name">Divadlo → Vlaštovičky</strong>
-                    <div class="route-desc" data-i18n="l212-desc">Spojuje centrum s částí Vlaštovičky</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">213</div>
-                    <strong data-i18n="l213-name">Kylešovice, SÚS → Vávrovice, Karlovec</strong>
-                    <div class="route-desc" data-i18n="l213-desc">Kylešovice → Bartoníčkova → Rooseveltova → Divadlo → Dolní náměstí → Kateřinky → Vávrovice</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">214</div>
-                    <strong data-i18n="l214-name">Dobrovského → Komárov (Teva / průmysl)</strong>
-                    <div class="route-desc" data-i18n="l214-desc">Spojuje Kateřinky / centrum s průmyslovou částí Komárov</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">215</div>
-                    <strong data-i18n="l215-name">Globus → Divadlo</strong>
-                    <div class="route-desc" data-i18n="l215-desc">Kratší linka mezi nákupní zónou a centrem</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">216</div>
-                    <strong data-i18n="l216-name">Vávrovice, Držkovice → Dolní náměstí</strong>
-                    <div class="route-desc" data-i18n="l216-desc">Přímé spojení okrajové části s centrem</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">217</div>
-                    <strong data-i18n="l217-name">Slavkov → Divadlo</strong>
-                    <div class="route-desc" data-i18n="l217-desc">Spojuje obec Slavkov s Opavou</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">218</div>
-                    <strong data-i18n="l218-name">Koupaliště → Chvalíkovice</strong>
-                    <div class="route-desc" data-i18n="l218-desc">Rekreační + příměstská linka</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">219</div>
-                    <strong data-i18n="l219-name">Otice → Malé Hoštice</strong>
-                    <div class="route-desc" data-i18n="l219-desc">Propojuje dvě obce přes Opavu</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-purple">228</div>
-                    <strong data-i18n="l228-name">Divadlo → Noční okruh</strong>
-                    <div class="route-desc" data-i18n="l228-desc">Obsluhuje hlavní směry v noci</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-purple">229</div>
-                    <strong data-i18n="l229-name">Kylešovice → Divadlo (noční)</strong>
-                    <div class="route-desc" data-i18n="l229-desc">Noční spojení sídlišť s centrem</div>
-                </div>
+    <!-- PAGE: DSZO ZLÍN -->
+    <div id="dszo" class="page">
+        <h2 class="section-title" data-i18n="dszo-t">Dopravní společnost Zlín - Otrokovice</h2>
+        <div class="grid">
+            <div class="card" data-search="2 bartošova malenovice trolejbus">
+                <div class="line-badge b-trolley">2</div>
+                <h3>Bartošova čtvrť ↔ Malenovice</h3>
+                <p>Tradiční linka spojující centrum Zlína s Malenovicemi.</p>
+                <div class="route-path">Dlouhá — Malenovice Centro — Zlín Střed</div>
             </div>
-
-            <h2 class="section-title" data-i18n="mdpo-trol-title">MDPO - Trolejbusové linky</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="line-badge b-yellow">201</div>
-                    <strong data-i18n="l201-name">Městský hřbitov ↔ Bílovecká</strong>
-                    <div class="route-desc" data-i18n="l201-desc">Hlavní trolejbusová tepna Opavy přes Východní nádraží.</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-yellow">204</div>
-                    <strong data-i18n="l204-name">Englišova ↔ Kylešovice, škola</strong>
-                    <div class="route-desc" data-i18n="l204-desc">Obsluha rezidenčních čtvrtí a školských zařízení.</div>
-                </div>
+            <div class="card" data-search="1 pančava přehrada tramvaj">
+                <div class="line-badge b-tram">1</div>
+                <h3>Pančava ↔ Kudlovská přehrada</h3>
+                <p>Fiktivní tramvajová linka v rámci Roblox simulace.</p>
+                <div class="route-path">Náměstí Míru — Přehrada — Pančava</div>
+            </div>
+            <div class="card" data-search="55 otrokovice štěrkoviště autobus">
+                <div class="line-badge b-bus">55</div>
+                <h3>Otrokovice ↔ Štěrkoviště</h3>
+                <p>Místní obsluha Otrokovic směrem k rekreační oblasti.</p>
+                <div class="route-path">Nádraží — Pošta — Štěrkoviště</div>
             </div>
         </div>
-
-        <!-- DSZO STRÁNKA -->
-        <div id="dszo" class="page">
-            <h2 class="section-title" data-i18n="dszo-title">DSZO - Zlín & Otrokovice</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="line-badge b-yellow">2</div>
-                    <strong data-i18n="zl2-name">Bartošova čtvrť ↔ Malenovice</strong>
-                    <div class="route-desc" data-i18n="zl2-desc">Páteřní linka spojující východ a západ Zlína.</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-yellow">6</div>
-                    <strong data-i18n="zl6-name">Jižní Svahy ↔ Otrokovice, žel.st.</strong>
-                    <div class="route-desc" data-i18n="zl6-desc">Dlouhá linka obsluhující největší sídliště a sousední město.</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">55</div>
-                    <strong data-i18n="zl55-name">Otrokovice, nádraží ↔ Štěrkoviště</strong>
-                    <div class="route-desc" data-i18n="zl55-desc">Místní autobusová linka v Otrokovicích k rekreační zóně.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- INGAME STRÁNKA -->
-        <div id="ingame" class="page">
-            <h2 class="section-title" data-i18n="ing-title">INGAME - Roblox Linky</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="line-badge b-green">T1</div>
-                    <strong data-i18n="int1-name">Vozovna ↔ Přístav</strong>
-                    <div class="route-desc" data-i18n="int1-desc">Tramvajová linka obsluhující průmyslovou zónu.</div>
-                </div>
-                <div class="card">
-                    <div class="line-badge b-blue">159</div>
-                    <strong data-i18n="in159-name">Lomy ↔ Terminál</strong>
-                    <div class="route-desc" data-i18n="in159-desc">Autobusové spojení těžební oblasti s městem.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VOZOVNA STRÁNKA -->
-        <div id="fleet" class="page">
-            <h2 class="section-title" data-i18n="v-tram-h">Vozový park - Tramvaje</h2>
-            <table class="fleet-table">
-                <thead>
-                    <tr><th data-i18n="v-mod">Model</th><th data-i18n="v-info">Informace</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Tatra T3</td><td data-i18n="v-t3-d">Klasická čkd legenda, dostupná v různých modifikacích.</td></tr>
-                    <tr><td>Škoda 39T ForCity Smart</td><td data-i18n="v-39t-d">Nejmodernější nízkopodlažní vůz v naší flotile.</td></tr>
-                </tbody>
-            </table>
-
-            <h2 class="section-title" data-i18n="v-bus-h">Vozový park - Autobusy</h2>
-            <table class="fleet-table">
-                <thead>
-                    <tr><th data-i18n="v-mod">Model</th><th data-i18n="v-info">Informace</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Karosa B951E</td><td data-i18n="v-kar-d">Městský sólo autobus s manuální převodovkou.</td></tr>
-                    <tr><td>Solaris Urbino 12</td><td data-i18n="v-sol12-d">Moderní 12m autobus pro městský provoz.</td></tr>
-                    <tr><td>Solaris Urbino 18 <span class="tag">Kloubový</span></td><td data-i18n="v-sol18-d">Kloubový velkokapacitní vůz pro vytížené linky.</td></tr>
-                </tbody>
-            </table>
-
-            <h2 class="section-title" data-i18n="v-trol-h">Vozový park - Trolejbusy</h2>
-            <table class="fleet-table">
-                <thead>
-                    <tr><th data-i18n="v-mod">Model</th><th data-i18n="v-info">Informace</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Škoda 14Tr</td><td data-i18n="v-14tr-d">Legendární trolejbus, standardní délka.</td></tr>
-                    <tr><td>Škoda 15Tr <span class="tag">Kloubový</span></td><td data-i18n="v-15tr-d">Kloubová verze klasického trolejbusu.</td></tr>
-                    <tr><td>Škoda 26Tr / 27Tr</td><td data-i18n="v-26tr-d">Moderní nízkopodlažní trolejbusy (Solaris karoserie).</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- FEEDBACK STRÁNKA -->
-        <div id="feedback" class="page">
-            <div class="feedback-box">
-                <h2 data-i18n="fed-h">Máte nápad na vylepšení?</h2>
-                <div class="stars" id="starRating">
-                    <span class="star" onclick="setRating(1)">★</span>
-                    <span class="star" onclick="setRating(2)">★</span>
-                    <span class="star" onclick="setRating(3)">★</span>
-                    <span class="star" onclick="setRating(4)">★</span>
-                    <span class="star" onclick="setRating(5)">★</span>
-                </div>
-                <textarea id="feedbackText" placeholder="Napište nám svůj nápad nebo připomínku..."></textarea>
-                <button class="btn-submit" onclick="sendEmail()" data-i18n="fed-send">ODESLAT PŘES E-MAIL</button>
-            </div>
-        </div>
-
     </div>
 
-    <footer>
-        <p>&copy; 2026 vCompany DSZO & MDPO Administrative Hub | Created for PetrSPlaysCZ Community</p>
-        <p data-i18n="foot-disclaimer">Tento web slouží pouze pro virtuální simulaci.</p>
-    </footer>
+    <!-- PAGE: SPECIAL -->
+    <div id="special" class="page">
+        <h2 class="section-title" data-i18n="spec-t">Speciální a Historické jízdy</h2>
+        <div class="grid">
+            <div class="card" data-search="230 tesco kylešovice kateřinky historická">
+                <div class="line-badge b-spec">230</div>
+                <h3>Tesco ↔ Kateřinky (Okružní)</h3>
+                <p>Historická linka, která sloužila pro obsluhu obchodních domů.</p>
+                <div class="route-path">Tesco — Kylešovice — Kateřinky — Tesco</div>
+            </div>
+            <div class="card" data-search="X výluka náhradní">
+                <div class="line-badge b-spec">X</div>
+                <h3>Náhradní doprava (Výluka)</h3>
+                <p>Operativní linka nasazovaná při nehodách nebo opravách tratí.</p>
+                <div class="route-path">Dle aktuální potřeby dispečinku</div>
+            </div>
+        </div>
+    </div>
 
-    <!-- SKRIPTY (JAVASCRIPT) -->
-    <script>
-        // --- DATA PŘEKLADŮ ---
-        const i18n = {
-            cz: {
-                "nav-mdpo": "MDPO", "nav-dszo": "DSZO", "nav-ingame": "INGAME", "nav-fleet": "Vozovna", "nav-feedback": "Nápady",
-                "head-title": "DSZO & MDPO Management", "mdpo-bus-title": "MDPO - Autobusové linky",
-                "l211-name": "Prasková → Podvihov, Na Nové", "l211-desc": "Prasková → Anenská → Těšínská → Jatky → Ostroj → Papírny → Globus → Komárov → Podvihov",
-                "v-mod": "Model", "v-info": "Informace", "v-tram-h": "Vozový park - Tramvaje", "fed-send": "ODESLAT PŘES E-MAIL",
-                "set-header": "Nastavení systému", "set-mode": "Režim zobrazení:", "set-theme-btn": "Přepnout Dark / Light", "set-bright": "Úroveň jasu:", "set-lang": "Jazyk systému:"
-            },
-            en: {
-                "nav-mdpo": "MDPO Routes", "nav-dszo": "DSZO Routes", "nav-ingame": "INGAME", "nav-fleet": "Fleet", "nav-feedback": "Ideas",
-                "head-title": "DSZO & MDPO Management", "mdpo-bus-title": "MDPO - Bus Routes",
-                "l211-name": "Praskova → Podvihov, Na Nove", "l211-desc": "Praskova → Anenska → Tesinska → Jatky → Ostroj → Papirny → Globus → Komarov → Podvihov",
-                "v-mod": "Model", "v-info": "Information", "v-tram-h": "Fleet - Trams", "fed-send": "SEND VIA E-MAIL",
-                "set-header": "System Settings", "set-mode": "View Mode:", "set-theme-btn": "Switch Dark / Light", "set-bright": "Brightness Level:", "set-lang": "System Language:"
-            },
-            sk: {
-                "nav-mdpo": "MDPO", "nav-dszo": "DSZO", "nav-ingame": "INGAME", "nav-fleet": "Vozovňa", "nav-feedback": "Nápady",
-                "head-title": "DSZO & MDPO Management", "mdpo-bus-title": "MDPO - Autobusové linky",
-                "l211-name": "Prasková → Podvihov, Na Nové", "l211-desc": "Prasková → Anenská → Těšínská → Jatky → Ostroj → Papírny → Globus → Komárov → Podvihov",
-                "v-mod": "Model", "v-info": "Informácie", "v-tram-h": "Vozový park - Električky", "fed-send": "ODOSLAŤ CEZ E-MAIL"
-            },
-            de: {
-                "nav-mdpo": "MDPO Linien", "nav-fleet": "Fuhrpark", "fed-send": "PER E-MAIL SENDEN", "v-mod": "Modell", "v-info": "Informationen"
-            },
-            ua: {
-                "nav-mdpo": "Лінії MDPO", "nav-fleet": "Депо", "fed-send": "НАДІСЛАТИ ЕЛЕКТРОННОЮ ПОШТОЮ"
-            },
-            pl: {
-                "nav-mdpo": "Linie MDPO", "nav-fleet": "Zajezdnia", "fed-send": "WYŚLIJ PRZEZ E-MAIL"
-            },
-            fr: { "nav-mdpo": "Lignes MDPO", "nav-fleet": "Dépôt", "fed-send": "ENVOYER PAR EMAIL" },
-            es: { "nav-mdpo": "Líneas MDPO", "nav-fleet": "Depósito", "fed-send": "ENVIAR POR EMAIL" },
-            it: { "nav-mdpo": "Linee MDPO", "nav-fleet": "Deposito", "fed-send": "INVIA VIA EMAIL" },
-            bg: { "nav-mdpo": "MDPO Линии", "nav-fleet": "Депо", "fed-send": "ИЗПРАЩАНЕ ПО ИМЕЙЛ" }
-        };
+    <!-- PAGE: FLEET -->
+    <div id="fleet" class="page">
+        <h2 class="section-title" data-i18n="fleet-t">Vozový park vCompany</h2>
+        <div class="grid">
+            <div class="card" data-search="tatra t3 tramvaj">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Tatra_T3R.P_v_Brn%C4%9B.jpg/400px-Tatra_T3R.P_v_Brn%C4%9B.jpg" class="card-img" alt="Tatra T3">
+                <h3>Tatra T3R.P</h3>
+                <p>Legendární tramvaj, která tvoří páteř našich fiktivních linek.</p>
+            </div>
+            <div class="card" data-search="skoda 26tr trolejbus">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Ostrava%2C_Škoda_26Tr_Solaris_č._3724_%2801%29.jpg/400px-Ostrava%2C_Škoda_26Tr_Solaris_č._3724_%2801%29.jpg" class="card-img" alt="26Tr">
+                <h3>Škoda 26Tr Solaris</h3>
+                <p>Moderní nízkopodlažní trolejbus pro komfortní přepravu.</p>
+            </div>
+            <div class="card" data-search="karosa b951 autobus">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Karosa_B_951_E_v_Praze.jpg/400px-Karosa_B_951_E_v_Praze.jpg" class="card-img" alt="Karosa">
+                <h3>Karosa B951E</h3>
+                <p>Vysokopodlažní klasika, kterou v naší společnosti stále milujeme.</p>
+            </div>
+        </div>
+    </div>
 
-        // --- FUNKCE SYSTÉMU ---
-        function toggleSettings() {
-            document.getElementById('settingsPanel').classList.toggle('open');
-        }
+    <!-- PAGE: INFO -->
+    <div id="info" class="page">
+        <div class="info-box">
+            <h2 data-i18n="about-h">O projektu vCompany</h2>
+            <p>Jsme komunita nadšenců do simulátorů veřejné dopravy (primárně Roblox). Naším cílem je vytvářet realistické prostředí pro řidiče i cestující v digitálním světě.</p>
+            <hr style="border:0; border-top: 1px solid var(--border); margin: 30px 0;">
+            <h4 data-i18n="about-stat">Statistiky systému 2026:</h4>
+            <ul style="color: var(--text-dim)">
+                <li>Počet aktivních linek: 24</li>
+                <li>Počet registrovaných řidičů: 158</li>
+                <li>Průměrná dochvilnost: 98.4%</li>
+            </ul>
+        </div>
+    </div>
 
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-        }
+    <!-- PAGE: FEEDBACK -->
+    <div id="feedback" class="page">
+        <div class="feedback-form">
+            <h2 data-i18n="feed-h">Zanechte nám nápad</h2>
+            <p data-i18n="feed-p">Vaše zpětná vazba pohání vývoj MDPO i DSZO kupředu.</p>
+            
+            <div class="star-rating" id="stars">
+                <span class="star" onclick="setStar(1)">★</span>
+                <span class="star" onclick="setStar(2)">★</span>
+                <span class="star" onclick="setStar(3)">★</span>
+                <span class="star" onclick="setStar(4)">★</span>
+                <span class="star" onclick="setStar(5)">★</span>
+            </div>
 
-        function changeBrightness(val) {
-            document.documentElement.style.setProperty('--brightness', val + '%');
-        }
+            <textarea id="feedMsg" placeholder="Napište svůj nápad nebo připomínku..."></textarea>
+            <button class="btn-submit" onclick="sendMail()" data-i18n="feed-btn">ODESLAT PŘES E-MAIL</button>
+        </div>
+    </div>
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
-            if(window.innerWidth < 800) toggleSettings();
-        }
+    <!-- PAGE: LINKS -->
+    <div id="links" class="page">
+        <h2 class="section-title">Užitečné odkazy</h2>
+        <div class="grid">
+            <a href="https://discord.gg/RaJNFJjkE" target="_blank" class="card" style="text-decoration:none">
+                <h3>Discord: DPO vCompany</h3>
+                <p>Hlavní komunikační uzel pro MDPO.</p>
+            </a>
+            <a href="https://discord.gg/beSUmraDMC" target="_blank" class="card" style="text-decoration:none">
+                <h3>Discord: vCompany Main</h3>
+                <p>Hlavní server pro všechny simulace.</p>
+            </a>
+            <a href="https://youtube.com/@petrsplayscz" target="_blank" class="card" style="text-decoration:none">
+                <h3>YouTube: PetrSPlaysCZ</h3>
+                <p>Sledujte naše livestreamy a tutoriály.</p>
+            </a>
+        </div>
+    </div>
 
-        function setLanguage(lang) {
-            const data = i18n[lang] || i18n['cz'];
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(data[key]) el.innerText = data[key];
-            });
-            toggleSettings();
-        }
+</div>
 
-        let userRating = 0;
-        function setRating(n) {
-            userRating = n;
-            const stars = document.querySelectorAll('.star');
-            stars.forEach((s, i) => s.classList.toggle('active', i < n));
-        }
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>vCompany Hub</h4>
+            <p style="font-size:0.8rem; color:var(--text-dim)">Největší československá komunita virtuálních řidičů MHD v prostředí Roblox.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="f-link">Rychlé odkazy</h4>
+            <a href="#" onclick="nav('mdpo')">MDPO Opava</a>
+            <a href="#" onclick="nav('dszo')">DSZO Zlín</a>
+            <a href="#" onclick="nav('fleet')">Vozový park</a>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="f-social">Sociální sítě</h4>
+            <a href="#">Discord</a>
+            <a href="#">YouTube</a>
+            <a href="#">Instagram</a>
+        </div>
+    </div>
+    <p style="opacity:0.3; font-size:0.8rem">&copy; 2026 vCompany DSZO & MDPO Administrative System. Všechna práva vyhrazena.</p>
+</footer>
 
-        function sendEmail() {
-            const text = document.getElementById('feedbackText').value;
-            const body = encodeURIComponent(`Hodnocení: ${userRating}/5\nNápad: ${text}`);
-            window.location.href = `mailto:smatlakp003@gmail.com?subject=vCompany Suggestion&body=${body}`;
-        }
-    </script>
+<script>
+    // --- TRANSLATIONS DICTIONARY (Všech 10 jazyků) ---
+    const i18n = {
+        cs: {
+            "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlín", "nav-spec": "Speciální", "nav-fleet": "Vozovna", "nav-info": "O nás", "nav-feed": "Nápady", "nav-links": "Odkazy",
+            "set-h": "Nastavení", "set-theme": "Vizuální režim", "set-bright": "Jas", "set-font": "Velikost textu", "set-lang": "Jazyk",
+            "hero-h": "MDPO & DSZO Hub", "hero-p": "Centrální správa virtuální dopravy.", "mdpo-t": "MDPO Opava", "dszo-t": "DSZO Zlín",
+            "spec-t": "Speciální linky", "fleet-t": "Vozový park", "about-h": "O projektu vCompany", "feed-h": "Nápady", "feed-btn": "Odeslat e-mail"
+        },
+        en: {
+            "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlin", "nav-spec": "Special", "nav-fleet": "Depot", "nav-info": "About", "nav-feed": "Ideas", "nav-links": "Links",
+            "set-h": "Settings", "set-theme": "Visual Theme", "set-bright": "Brightness", "set-font": "Text Size", "set-lang": "Language",
+            "hero-h": "Management Hub", "hero-p": "Central management of virtual transport.", "mdpo-t": "MDPO Opava", "dszo-t": "DSZO Zlin",
+            "spec-t": "Special Routes", "fleet-t": "Fleet", "about-h": "About vCompany", "feed-h": "Feedback", "feed-btn": "Send Email"
+        },
+        sk: {
+            "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlín", "nav-spec": "Špeciálne", "nav-fleet": "Vozovňa", "nav-info": "O nás", "nav-feed": "Nápady", "nav-links": "Odkazy",
+            "set-h": "Nastavenia", "hero-h": "MDPO & DSZO Hub", "feed-btn": "Odoslať e-mail"
+        },
+        pl: { "nav-mdpo": "MDPO Opawa", "nav-dszo": "DSZO Zlin", "nav-fleet": "Zajezdnia", "hero-h": "Centrum Zarządzania", "feed-btn": "Wyślij e-mail" },
+        de: { "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlin", "nav-fleet": "Fuhrpark", "hero-h": "Management Hub", "feed-btn": "E-Mail senden" },
+        ua: { "nav-mdpo": "MDPO Опава", "nav-dszo": "DSZO Злін", "nav-fleet": "Депо", "hero-h": "Центр управління", "feed-btn": "Надіслати електронною поштою" },
+        fr: { "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlin", "nav-fleet": "Dépôt", "hero-h": "Hub de gestion", "feed-btn": "Envoyer un e-mail" },
+        es: { "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlin", "nav-fleet": "Depósito", "hero-h": "Hub de gestión", "feed-btn": "Enviar correo" },
+        it: { "nav-mdpo": "MDPO Opava", "nav-dszo": "DSZO Zlin", "nav-fleet": "Deposito", "hero-h": "Hub di gestione", "feed-btn": "Invia e-mail" },
+        bg: { "nav-mdpo": "MDPO Опава", "nav-dszo": "DSZO Злин", "nav-fleet": "Депо", "hero-h": "Управленски център", "feed-btn": "Изпратете имейл" }
+    };
+
+    // --- SYSTEM LOGIC ---
+    function nav(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('n-' + id).classList.add('active');
+        window.scrollTo(0, 0);
+        if(window.innerWidth < 1000) toggleSettings(false);
+    }
+
+    function toggleSettings(force) {
+        const menu = document.getElementById('settingsMenu');
+        if(force === false) menu.style.display = 'none';
+        else menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light-theme');
+    }
+
+    function adjustBrightness(val) {
+        document.documentElement.style.setProperty('--brightness', val + '%');
+    }
+
+    function adjustFont(val) {
+        document.documentElement.style.setProperty('--font-size-base', val + 'px');
+    }
+
+    function changeLang(lang) {
+        const data = i18n[lang] || i18n['cs'];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(data[key]) el.innerText = data[key];
+        });
+        toggleSettings(false);
+    }
+
+    function doSearch() {
+        const q = document.getElementById('mainSearch').value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(c => {
+            const searchData = c.getAttribute('data-search') || "";
+            const content = c.innerText.toLowerCase();
+            if(content.includes(q) || searchData.includes(q)) {
+                c.classList.remove('hidden');
+            } else {
+                c.classList.add('hidden');
+            }
+        });
+    }
+
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('timer').innerText = now.toLocaleTimeString('cs-CZ');
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    let rating = 0;
+    function setStar(n) {
+        rating = n;
+        const stars = document.querySelectorAll('.star');
+        stars.forEach((s, i) => {
+            s.classList.toggle('active', i < n);
+        });
+    }
+
+    function sendMail() {
+        const msg = document.getElementById('feedMsg').value;
+        const body = encodeURIComponent(`Hodnocení: ${rating}/5\n\nZpráva:\n${msg}`);
+        window.location.href = `mailto:smatlakp003@gmail.com?subject=vCompany Idea&body=${body}`;
+    }
+
+    // Inicializace
+    console.log("vCompany System Loaded Successfully. Version 2.0.26");
+</script>
+
 </body>
 </html>
