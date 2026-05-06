@@ -3,522 +3,833 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDPO & DSZO vCompany | Ultimate Dashboard</title>
+    <title>MDPO & DSZO vCompany | Ultimate Dashboard v5.0</title>
+    <!-- Fonty a Ikony -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* KOMPLETNÍ STYLOVÁNÍ */
+        /* --- GLOBÁLNÍ PROMĚNNÉ A STYLY --- */
         :root {
             --primary: #2563eb;
             --secondary: #1e40af;
             --accent: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --bg: #f8fafc;
             --card: #ffffff;
             --text: #0f172a;
-            --text-light: #64748b;
+            --text-dim: #64748b;
             --border: #e2e8f0;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --glass: rgba(255, 255, 255, 0.8);
         }
 
         .dark-mode {
             --bg: #020617;
             --card: #1e293b;
             --text: #f1f5f9;
-            --text-light: #94a3b8;
+            --text-dim: #94a3b8;
             --border: #334155;
-            --glass: rgba(30, 41, 59, 0.9);
+            --glass: rgba(15, 23, 42, 0.9);
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
-        * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+        * {
+            box-sizing: border-box;
+            transition: background 0.4s ease, color 0.4s ease, transform 0.2s ease, border 0.3s ease;
+        }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* --- JAS FILTR --- */
         #brightness-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; opacity: 0; pointer-events: none; z-index: 10000;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 99999;
         }
 
-        /* HLAVIČKA */
+        /* --- HLAVIČKA (HEADER) --- */
         header {
             background: var(--primary);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
             color: white;
-            padding: 1rem 5%;
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .logo { font-size: 1.5rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .header-info {
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* NAVIGACE / MENU */
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        #clock {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
 
-        .home-grid {
+        #date {
+            font-size: 0.9rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .brand i {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        select {
+            background: var(--glass);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .theme-toggle {
+            background: var(--glass);
+            color: var(--text);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* --- HLAVNÍ KONTEJNER --- */
+        .container {
+            max-width: 1300px;
+            margin: 50px auto;
+            padding: 0 25px;
+        }
+
+        /* --- HOME MENU LAYOUT (3 + 3 + zbytek) --- */
+        .home-menu {
             display: flex;
             flex-direction: column;
             gap: 40px;
             align-items: center;
         }
 
-        /* 3 TOP KARTY */
-        .menu-row-primary {
+        .menu-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
             width: 100%;
         }
 
-        /* 3 SEKUNDÁRNÍ KARTY */
-        .menu-row-secondary {
-            display: grid;
+        /* 3 hlavní nahoře */
+        .row-top {
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+        }
+
+        /* 3 pod nimi */
+        .row-mid {
+            grid-template-columns: repeat(3, 1fr);
             width: 90%;
         }
 
-        /* ZBYTEK */
-        .menu-row-rest {
-            display: grid;
+        /* Zbytek pod tím */
+        .row-bottom {
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 70%;
+            width: 60%;
         }
 
-        .nav-card {
+        .menu-card {
             background: var(--card);
             border: 1px solid var(--border);
-            padding: 30px;
-            border-radius: 24px;
+            border-radius: 30px;
+            padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
-        .nav-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
             background: var(--primary);
+        }
+
+        .menu-card i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-card h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .menu-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-15px);
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .menu-card:hover i, .menu-card:hover h3, .menu-card:hover p {
             color: white;
         }
 
-        .nav-card i { font-size: 2.5rem; margin-bottom: 15px; display: block; }
-        .nav-card h3 { margin: 0; font-size: 1.2rem; }
+        .menu-card:hover i {
+            transform: scale(1.2) rotate(5deg);
+        }
 
-        /* STRÁNKY */
-        .page { display: none; animation: slideIn 0.4s ease-out; }
-        .page.active { display: block; }
+        /* --- STRÁNKY --- */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        @keyframes slideIn {
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .content-card {
             background: var(--card);
-            padding: 40px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 50px;
             box-shadow: var(--shadow);
-            margin-bottom: 30px;
+            border: 1px solid var(--border);
         }
 
         .back-btn {
             background: var(--primary);
             color: white;
-            padding: 12px 25px;
-            border-radius: 15px;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1.1rem;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            cursor: pointer;
-            margin-bottom: 25px;
-            font-weight: bold;
-            border: none;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
         }
 
-        /* TEAM STRÁNKA */
-        .team-container {
+        .back-btn:hover {
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        /* --- JÍZDNÍ ŘÁDY STYLY --- */
+        .timetable-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            gap: 15px;
+        }
+
+        .tt-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .tt-line {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .tt-info {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .tt-dest {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: block;
+        }
+
+        .tt-time {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* --- AI ASISTENT TERMINÁL --- */
+        .ai-wrapper {
+            background: #0f172a;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid #334155;
+        }
+
+        .ai-output {
+            height: 350px;
+            overflow-y: auto;
+            color: #38bdf8;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            line-height: 1.5;
+        }
+
+        .ai-output::-webkit-scrollbar {
+            width: 8px;
+        }
+        .ai-output::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        .ai-input-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .ai-input-group input {
+            flex: 1;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: white;
+            padding: 18px;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 1.1rem;
+        }
+
+        .ai-input-group button {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* --- TEAM GRID --- */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         .member-card {
             background: var(--bg);
-            padding: 20px;
-            border-radius: 20px;
-            border-left: 6px solid var(--primary);
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            border: 1px solid var(--border);
+            position: relative;
         }
 
-        .role-badge {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .member-role {
+            font-size: 0.75rem;
             font-weight: 900;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            background: var(--danger);
+            padding: 5px 15px;
+            border-radius: 20px;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        /* ODKAZY S IKONAMI */
-        .link-grid {
+        /* --- ODKAZY IKONY --- */
+        .social-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
 
-        .social-link {
+        .social-btn {
             display: flex;
             align-items: center;
             gap: 20px;
             padding: 25px;
-            background: var(--bg);
             border-radius: 20px;
+            background: var(--bg);
             text-decoration: none;
             color: var(--text);
+            font-weight: 700;
+            font-size: 1.2rem;
             border: 1px solid var(--border);
-            font-weight: bold;
         }
 
-        .social-link:hover { background: var(--primary); color: white; }
-        .social-link i { font-size: 2rem; }
-
-        /* AI STRÁNKA */
-        .ai-terminal {
-            background: #111827;
-            color: #10b981;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: 'Courier New', Courier, monospace;
-            min-height: 300px;
-            border: 2px solid #374151;
+        .social-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.02);
         }
 
-        /* FORMULÁŘE */
-        .input-group { margin-bottom: 20px; }
-        input, textarea, select {
-            width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--border);
-            background: var(--bg); color: var(--text); font-size: 1rem;
+        .social-btn i {
+            font-size: 2.5rem;
         }
 
-        /* RESPONZIVITA */
-        @media (max-width: 800px) {
-            .menu-row-primary, .menu-row-secondary, .menu-row-rest { grid-template-columns: 1fr; width: 100%; }
+        /* --- RESPONZIVITA --- */
+        @media (max-width: 1000px) {
+            .row-top, .row-mid, .row-bottom {
+                grid-template-columns: 1fr;
+                width: 100%;
+            }
+            .content-card { padding: 25px; }
+            .social-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div id="brightness-overlay"></div>
+    <div id="brightness-overlay"></div>
 
-<header>
-    <div class="logo" onclick="showPage('home')">
-        <i class="fas fa-bus-alt"></i> MDPO & DSZO HUB
-    </div>
-    <div style="display: flex; gap: 15px; align-items: center;">
-        <select id="langSwitcher" onchange="updateLanguage()" style="width: auto; padding: 5px; margin: 0;">
-            <option value="cs">🇨🇿 CZ</option>
-            <option value="en">🇬🇧 EN</option>
-            <option value="de">🇩🇪 DE</option>
-            <option value="ua">🇺🇦 UA</option>
-            <option value="sk">🇸🇰 SK</option>
-            <option value="ru">🇷🇺 RU</option>
-            <option value="bg">🇧🇬 BG</option>
-        </select>
-        <button onclick="toggleTheme()" style="background:none; border:none; color:white; font-size:1.4rem; cursor:pointer;">
-            <i class="fas fa-moon"></i>
-        </button>
-    </div>
-</header>
+    <!-- HEADER -->
+    <header>
+        <div class="header-info">
+            <div id="clock">00:00:00</div>
+            <div id="date">Načítání data...</div>
+        </div>
+        
+        <div class="brand" onclick="showPage('home')">
+            <i class="fas fa-bus-alt"></i>
+            <h1>vCompany HUB</h1>
+        </div>
 
-<div class="container">
+        <div class="header-tools">
+            <select id="langSwitcher" onchange="changeLanguage()">
+                <option value="cs">🇨🇿 CZ</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="de">🇩🇪 DE</option>
+                <option value="sk">🇸🇰 SK</option>
+                <option value="ua">🇺🇦 UA</option>
+                <option value="ru">🇷🇺 RU</option>
+                <option value="bg">🇧🇬 BG</option>
+            </select>
+            <button class="theme-toggle" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
 
-    <!-- HOME PAGE -->
-    <div id="home" class="page active">
-        <div class="home-grid">
-            <!-- PRVNÍ 3 - HLAVNÍ -->
-            <div class="menu-row-primary">
-                <div class="nav-card" onclick="showPage('vozovna')">
-                    <i class="fas fa-warehouse"></i>
-                    <h3 id="m-vozovna">Vozovna</h3>
-                </div>
-                <div class="nav-card" onclick="showPage('mdpo')">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <h3 id="m-mdpo">MDPO Linky</h3>
-                </div>
-                <div class="nav-card" onclick="showPage('dszo')">
-                    <i class="fas fa-city"></i>
-                    <h3 id="m-dszo">DSZO Linky</h3>
-                </div>
-            </div>
+    <div class="container">
 
-            <!-- DALŠÍCH 3 -->
-            <div class="menu-row-secondary">
-                <div class="nav-card" onclick="showPage('team')">
-                    <i class="fas fa-users-cog"></i>
-                    <h3 id="m-team">Vedení Teamu</h3>
+        <!-- DOMOVSKÁ STRÁNKA -->
+        <div id="home" class="page active">
+            <div class="home-menu">
+                <!-- TOP 3 -->
+                <div class="menu-row row-top">
+                    <div class="menu-card" onclick="showPage('vozovna')">
+                        <i class="fas fa-warehouse"></i>
+                        <h3 data-key="m-voz">Vozovna</h3>
+                        <p data-key="d-voz">Přehled vozového parku</p>
+                    </div>
+                    <div class="menu-card" onclick="showPage('mdpo')">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <h3 data-key="m-mdpo">MDPO Opava</h3>
+                        <p data-key="d-mdpo">Linkové vedení Opava</p>
+                    </div>
+                    <div class="menu-card" onclick="showPage('dszo')">
+                        <i class="fas fa-city"></i>
+                        <h3 data-key="m-dszo">DSZO Zlín</h3>
+                        <p data-key="d-dszo">Linkové vedení Zlín</p>
+                    </div>
                 </div>
-                <div class="nav-card" onclick="showPage('ai')">
-                    <i class="fas fa-robot"></i>
-                    <h3 id="m-ai">AI Asistent</h3>
-                </div>
-                <div class="nav-card" onclick="showPage('feedback')">
-                    <i class="fas fa-comment-alt"></i>
-                    <h3 id="m-feedback">Feedback</h3>
-                </div>
-            </div>
 
-            <!-- ZBYTEK -->
-            <div class="menu-row-rest">
-                <div class="nav-card" onclick="showPage('odkazy')">
-                    <i class="fas fa-external-link-alt"></i>
-                    <h3 id="m-odkazy">Odkazy</h3>
+                <!-- MID 3 -->
+                <div class="menu-row row-mid">
+                    <div class="menu-card" onclick="showPage('jr')">
+                        <i class="fas fa-clock"></i>
+                        <h3 data-key="m-jr">Jízdní řády</h3>
+                        <p data-key="d-jr">Aktuální odjezdy spojů</p>
+                    </div>
+                    <div class="menu-card" onclick="showPage('ai')">
+                        <i class="fas fa-robot"></i>
+                        <h3 data-key="m-ai">AI Asistent</h3>
+                        <p data-key="d-ai">Umělá inteligence vCompany</p>
+                    </div>
+                    <div class="menu-card" onclick="showPage('team')">
+                        <i class="fas fa-users-cog"></i>
+                        <h3 data-key="m-team">Team</h3>
+                        <p data-key="d-team">Vedení a správa projektu</p>
+                    </div>
                 </div>
-                <div class="nav-card" onclick="showPage('nastaveni')">
-                    <i class="fas fa-sliders-h"></i>
-                    <h3 id="m-nastaveni">Nastavení</h3>
+
+                <!-- BOTTOM REST -->
+                <div class="menu-row row-bottom">
+                    <div class="menu-card" onclick="showPage('links')">
+                        <i class="fas fa-external-link-alt"></i>
+                        <h3 data-key="m-odk">Odkazy</h3>
+                        <p data-key="d-odk">Discord, YouTube a weby</p>
+                    </div>
+                    <div class="menu-card" onclick="showPage('settings')">
+                        <i class="fas fa-sliders-h"></i>
+                        <h3 data-key="m-nas">Nastavení</h3>
+                        <p data-key="d-nas">Jas a systémové volby</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- STRÁNKA VOZOVNA -->
-    <div id="vozovna" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card">
-            <h1 id="h-vozovna">Vozový park vCompany</h1>
-            <div class="team-container">
-                <div>
-                    <h3>Autobusy</h3>
-                    <ul>
-                        <li>SOR BN12 / CN12[span_0](start_span)[span_0](end_span)</li>
-                        <li>Solaris Urbino 12 IV / III[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)</li>
-                        <li>Solaris Urbino 15 II[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)</li>
-                        <li>Solaris Urbino 18 IV[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)</li>
-                        <li>MAN Lion's City A21/A23[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>Trolejbusy</h3>
-                    <ul>
-                        <li>Škoda 14 Tr / 15 Tr[span_9](start_span)[span_9](end_span)</li>
-                        <li>Solaris Trolino 12/15/18/24[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)</li>
-                        <li>ZiU-9 / ZiU-11[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)</li>
-                        <li>Škoda 26Tr / 27Tr[span_14](start_span)[span_14](end_span)</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- STRÁNKA MDPO -->
-    <div id="mdpo" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card">
-            <h1>Linky MDPO Opava</h1>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <h4>Trolejbusy</h4>
-                    <p>201, 202, 203, 204[span_15](start_span)[span_15](end_span)</p>
-                </div>
-                <div>
-                    <h4>Autobusy</h4>
-                    <p>211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 228, 230[span_16](start_span)[span_16](end_span)</p>
+        <!-- STRÁNKA VOZOVNA -->
+        <div id="vozovna" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card">
+                <h2 data-key="h-voz">Vozový park vCompany</h2>
+                <div class="team-grid">
+                    <div class="member-card">
+                        <span class="member-role" style="background:var(--primary)">BUS</span>
+                        <h3>Solaris Urbino 18 IV</h3>
+                        <p>Kloubový moderní autobus pro páteřní linky.[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)</p>
+                    </div>
+                    <div class="member-card">
+                        <span class="member-role" style="background:var(--success)">TROL</span>
+                        <h3>Škoda 14Tr</h3>
+                        <p>Legendární trolejbus v retro nátěru.[span_2](start_span)[span_2](end_span)</p>
+                    </div>
+                    <div class="member-card">
+                        <span class="member-role" style="background:var(--primary)">BUS</span>
+                        <h3>SOR BN12</h3>
+                        <p>Standardní městský autobus MDPO.[span_3](start_span)[span_3](end_span)</p>
+                    </div>
+                    <div class="member-card">
+                        <span class="member-role" style="background:var(--success)">TROL</span>
+                        <h3>ZiU-11</h3>
+                        <p>Raritní sovětský trolejbus ve sbírce.[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- STRÁNKA DSZO -->
-    <div id="dszo" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card">
-            <h1>Linky DSZO Zlín & Otrokovice</h1>
-            <p><strong>Trolejbusy:</strong> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14[span_17](start_span)[span_17](end_span)[span_18](start_span)[span_18](end_span)</p>
-            <p><strong>Autobusy:</strong> 31, 32, 33, 34, 35, 36, 38, 46, 47, 51, 52, 53, 55, 70[span_19](start_span)[span_19](end_span)[span_20](start_span)[span_20](end_span)</p>
-        </div>
-    </div>
-
-    <!-- STRÁNKA TEAM -->
-    <div id="team" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card">
-            <h1 id="h-team">Vedení vCompany</h1>
-            <div class="team-container">
-                <div class="member-card">
-                    <span class="role-badge">Majitel</span>
-                    <h3>Petrsplayscz / Smatlina</h3>
-                </div>
-                <div class="member-card">
-                    <span class="role-badge" style="color:#f59e0b; background:rgba(245,158,11,0.1);">Spolumajitel</span>
-                    <h3>kubusrychlobus</h3>
-                </div>
-                <div class="member-card">
-                    <span class="role-badge" style="color:#f59e0b; background:rgba(245,158,11,0.1);">Spolumajitel</span>
-                    <h3>ladislav_258</h3>
-                </div>
-                <div class="member-card">
-                    <span class="role-badge" style="color:#f59e0b; background:rgba(245,158,11,0.1);">Spolumajitel</span>
-                    <h3>adam037110</h3>
+        <!-- STRÁNKA MDPO -->
+        <div id="mdpo" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card">
+                <h2>Městský dopravní podnik Opava</h2>
+                <div class="timetable-container">
+                    <div class="tt-row"><span class="tt-line">201</span> <div class="tt-info"><span class="tt-dest">Kylešovice, Bílovecká ➔ Hřbitov</span></div></div>
+                    <div class="tt-row"><span class="tt-line">202</span> <div class="tt-info"><span class="tt-dest">Kateřinky ➔ Albert hypermarket</span></div></div>
+                    <div class="tt-row"><span class="tt-line">211</span> <div class="tt-info"><span class="tt-dest">Praskova ➔ Podvihov</span></div></div>
+                    <div class="tt-row"><span class="tt-line">221</span> <div class="tt-info"><span class="tt-dest">Globus ➔ Jaktař</span></div></div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- STRÁNKA ODKAZY -->
-    <div id="odkazy" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card">
-            <h1>Důležité Odkazy</h1>
-            <div class="link-grid">
-                <a href="https://discord.gg/beSUmraDMC" class="social-link">
-                    <i class="fab fa-discord" style="color: #5865F2;"></i>
-                    <span>Discord Official</span>
-                </a>
-                <a href="https://youtube.com/@petrsplayscz" class="social-link">
-                    <i class="fab fa-youtube" style="color: #FF0000;"></i>
-                    <span>YouTube Kanál</span>
-                </a>
-                <a href="https://discord.gg/aFfqqdFe3A" class="social-link">
-                    <i class="fas fa-id-badge" style="color: #10b981;"></i>
-                    <span>Ostrava vCompany</span>
-                </a>
-                <a href="#" class="social-link">
-                    <i class="fas fa-globe" style="color: #3b82f6;"></i>
-                    <span>Webová Stránka</span>
-                </a>
+        <!-- STRÁNKA DSZO -->
+        <div id="dszo" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card">
+                <h2>Dopravní společnost Zlín - Otrokovice</h2>
+                <div class="timetable-container">
+                    <div class="tt-row"><span class="tt-line">1</span> <div class="tt-info"><span class="tt-dest">Prštné ➔ Otrokovice, žel.st.</span></div></div>
+                    <div class="tt-row"><span class="tt-line">6</span> <div class="tt-info"><span class="tt-dest">Jižní Svahy ➔ Želechovice</span></div></div>
+                    <div class="tt-row"><span class="tt-line">33</span> <div class="tt-info"><span class="tt-dest">Bartošova čtvrť ➔ Paseky</span></div></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- STRÁNKA AI -->
-    <div id="ai" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card">
-            <h1>vCompany AI Asistent</h1>
-            <p>Položte dotaz našemu systému.</p>
-            <div class="ai-terminal" id="ai-out">
-                > System Ready...<br>
-                > Awaiting command...
-            </div>
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <input type="text" id="ai-input" placeholder="Zeptej se na linku nebo vozidlo...">
-                <button class="back-btn" onclick="askAI()" style="margin-bottom:0;">Odeslat</button>
+        <!-- STRÁNKA JÍZDNÍ ŘÁDY -->
+        <div id="jr" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card">
+                <h2 data-key="m-jr">Aktuální odjezdy spojů</h2>
+                <div id="live-timetables" class="timetable-container">
+                    <!-- Generováno JS -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- STRÁNKA NASTAVENÍ -->
-    <div id="nastaveni" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card" style="max-width: 600px;">
-            <h1>Systémové Nastavení</h1>
-            <div class="input-group">
-                <label><i class="fas fa-sun"></i> Regulace jasu</label>
-                <input type="range" min="0" max="90" value="0" oninput="adjustBrightness(this.value)">
-            </div>
-            <div class="input-group">
-                <label><i class="fas fa-palette"></i> Režim rozhraní</label>
-                <button class="back-btn" style="width:100%;" onclick="toggleTheme()">Přepnout Dark / Light Mode</button>
+        <!-- STRÁNKA AI ASISTENT -->
+        <div id="ai" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card">
+                <h2 data-key="m-ai">vCompany AI Asistent</h2>
+                <div class="ai-wrapper">
+                    <div class="ai-output" id="ai-log">
+                        [SYSTEM]: Inicializace vCompany AI...<br>
+                        [SYSTEM]: Připraven. Zadejte příkaz nebo se zeptejte na linku.
+                    </div>
+                    <div class="ai-input-group">
+                        <input type="text" id="ai-query" placeholder="Zeptej se např: Kdy jede 201?">
+                        <button onclick="processAI()">ODESLAT</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- STRÁNKA FEEDBACK -->
-    <div id="feedback" class="page">
-        <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
-        <div class="content-card" style="max-width: 700px;">
-            <h1>Zpětná Vazba</h1>
-            <div class="input-group">
-                <label>Nickname</label>
-                <input type="text" id="fb-name" placeholder="Vaše jméno...">
+        <!-- STRÁNKA TEAM -->
+        <div id="team" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card">
+                <h2 data-key="m-team">Vedení vCompany</h2>
+                <div class="team-grid">
+                    <div class="member-card">
+                        <span class="member-role">Majitel</span>
+                        <h3>Petrsplayscz / Smatlina</h3>
+                        <p>Zakladatel projektu a hlavní vývojář.</p>
+                    </div>
+                    <div class="member-card">
+                        <span class="member-role" style="background:var(--warning)">Spolumajitel</span>
+                        <h3>kubusrychlobus</h3>
+                        <p>Správa vozového parku a jízdních řádů.</p>
+                    </div>
+                    <div class="member-card">
+                        <span class="member-role" style="background:var(--warning)">Spolumajitel</span>
+                        <h3>ladislav_258</h3>
+                        <p>Technická podpora a vnější vztahy.</p>
+                    </div>
+                    <div class="member-card">
+                        <span class="member-role" style="background:var(--warning)">Spolumajitel</span>
+                        <h3>adam037110</h3>
+                        <p>Koordinátor náboru a herních akcí.</p>
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <label>Zpráva / Hlášení</label>
-                <textarea id="fb-text" rows="5" placeholder="Popište problém nebo nápad..."></textarea>
-            </div>
-            <button class="back-btn" onclick="sendFeedback()" style="width:100%;">Odeslat hlášení</button>
         </div>
+
+        <!-- STRÁNKA ODKAZY -->
+        <div id="links" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card">
+                <h2 data-key="m-odk">Důležité odkazy</h2>
+                <div class="social-grid">
+                    <a href="https://discord.gg/beSUmraDMC" target="_blank" class="social-btn">
+                        <i class="fab fa-discord" style="color:#5865F2"></i>
+                        <span>Discord Official MDPO</span>
+                    </a>
+                    <a href="https://youtube.com/@petrsplayscz" target="_blank" class="social-btn">
+                        <i class="fab fa-youtube" style="color:#FF0000"></i>
+                        <span>YouTube PetrsPlaysCZ</span>
+                    </a>
+                    <a href="https://discord.gg/aFfqqdFe3A" target="_blank" class="social-btn">
+                        <i class="fas fa-briefcase" style="color:#10b981"></i>
+                        <span>Ostrava vCompany</span>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fas fa-globe" style="color:#3b82f6"></i>
+                        <span>Oficiální Web (Brzy)</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- STRÁNKA NASTAVENÍ -->
+        <div id="settings" class="page">
+            <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> Zpět</button>
+            <div class="content-card" style="max-width: 600px; margin: 0 auto;">
+                <h2 data-key="m-nas">Systémové nastavení</h2>
+                <div style="margin-bottom: 30px;">
+                    <label style="display:block; margin-bottom:10px; font-weight:700;">Jas displeje</label>
+                    <input type="range" min="0" max="85" value="0" style="width:100%" oninput="updateBrightness(this.value)">
+                </div>
+                <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+                <p style="text-align:center; color:var(--text-dim);">
+                    vCompany Dashboard v5.0.4<br>
+                    Build 2024_FINAL
+                </p>
+            </div>
+        </div>
+
     </div>
 
-</div>
+    <script>
+        /* --- DATABÁZE PŘEKLADŮ --- */
+        const langDB = {
+            'cs': {
+                'm-voz': 'Vozovna', 'm-mdpo': 'MDPO Opava', 'm-dszo': 'DSZO Zlín', 'm-jr': 'Jízdní řády',
+                'm-ai': 'AI Asistent', 'm-team': 'Team', 'm-odk': 'Odkazy', 'm-nas': 'Nastavení',
+                'd-voz': 'Přehled vozového parku', 'd-mdpo': 'Linkové vedení Opava', 'd-dszo': 'Linkové vedení Zlín',
+                'd-jr': 'Aktuální odjezdy spojů', 'd-ai': 'Umělá inteligence vCompany', 'd-team': 'Vedení a správa projektu',
+                'd-odk': 'Discord, YouTube a weby', 'd-nas': 'Jas a systémové volby', 'h-voz': 'Vozový park vCompany'
+            },
+            'en': {
+                'm-voz': 'Depot', 'm-mdpo': 'MDPO Opava', 'm-dszo': 'DSZO Zlin', 'm-jr': 'Timetables',
+                'm-ai': 'AI Assistant', 'm-team': 'Team', 'm-odk': 'Links', 'm-nas': 'Settings',
+                'd-voz': 'Fleet overview', 'd-mdpo': 'Opava Route Map', 'd-dszo': 'Zlin Route Map',
+                'd-jr': 'Current departures', 'd-ai': 'vCompany AI Engine', 'd-team': 'Project management',
+                'd-odk': 'Discord and YouTube', 'd-nas': 'System settings', 'h-voz': 'vCompany Fleet'
+            },
+            'de': {
+                'm-voz': 'Depot', 'm-mdpo': 'MDPO Opava', 'm-dszo': 'DSZO Zlin', 'm-jr': 'Fahrplan',
+                'm-ai': 'KI Assistent', 'm-team': 'Team', 'm-odk': 'Links', 'm-nas': 'Einstell.',
+                'd-voz': 'Fahrzeugpark', 'd-mdpo': 'Liniennetz Opava', 'd-dszo': 'Liniennetz Zlin',
+                'd-jr': 'Aktuelle Abfahrten', 'd-ai': 'vCompany KI', 'd-team': 'Projektleitung',
+                'd-odk': 'Discord und YouTube', 'd-nas': 'Systemoptionen', 'h-voz': 'Fahrzeugpark vCompany'
+            }
+            // UA, RU, SK, BG by se doplnily analogicky...
+        };
 
-<script>
-    // PŘEKLADY (VŠECH 7 JAZYKŮ)
-    const langData = {
-        'cs': {
-            'm-vozovna': 'Vozovna', 'm-mdpo': 'MDPO Linky', 'm-dszo': 'DSZO Linky', 'm-team': 'Vedení Teamu',
-            'm-ai': 'AI Asistent', 'm-feedback': 'Feedback', 'm-odkazy': 'Odkazy', 'm-nastaveni': 'Nastavení',
-            'h-vozovna': 'Vozový park vCompany', 'h-team': 'Vedení vCompany'
-        },
-        'en': {
-            'm-vozovna': 'Depot', 'm-mdpo': 'MDPO Lines', 'm-dszo': 'DSZO Lines', 'm-team': 'Management',
-            'm-ai': 'AI Assistant', 'm-feedback': 'Feedback', 'm-odkazy': 'Links', 'm-nastaveni': 'Settings',
-            'h-vozovna': 'vCompany Fleet', 'h-team': 'vCompany Leaders'
+        /* --- SYSTÉMOVÉ FUNKCE --- */
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
         }
-        // ... (Další jazyky by se přidaly stejným klíčem)
-    };
 
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        window.scrollTo(0, 0);
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-    }
-
-    function adjustBrightness(val) {
-        document.getElementById('brightness-overlay').style.opacity = val / 100;
-    }
-
-    function updateLanguage() {
-        const lang = document.getElementById('langSwitcher').value;
-        if(langData[lang]) {
-            for(let key in langData[lang]) {
-                const el = document.getElementById(key);
-                if(el) el.innerText = langData[lang][key];
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.querySelector('.theme-toggle i');
+            if(document.body.classList.contains('dark-mode')) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
             }
         }
-    }
 
-    function askAI() {
-        const input = document.getElementById('ai-input').value.toLowerCase();
-        const out = document.getElementById('ai-out');
-        let response = "> Analyzing database...<br>> ";
-        
-        if(input.includes('201')) response += "Linka 201 (MDPO): Kylešovice ↔ Hřbitov. Typ: Trolejbus.";
-        else if(input.includes('majitel')) response += "Majitelem vCompany je Petrsplayscz / Smatlina.";
-        else if(input.includes('sor')) response += "Vozidlo SOR BN12 je dostupné v garážích Opava.";
-        else response += "Dotaz nebyl rozpoznán. Zkuste: 'Linka 201', 'Majitel' nebo 'SOR'.";
-        
-        out.innerHTML += "<br>> " + input + "<br>" + response;
-        document.getElementById('ai-input').value = "";
-    }
-
-    function sendFeedback() {
-        const nick = document.getElementById('fb-name').value;
-        if(nick) {
-            alert('Děkujeme, ' + nick + '! Vaše hlášení bylo odesláno.');
-            showPage('home');
-        } else {
-            alert('Zadejte prosím jméno.');
+        function updateBrightness(val) {
+            document.getElementById('brightness-overlay').style.opacity = val / 100;
         }
-    }
-</script>
 
+        function changeLanguage() {
+            const lang = document.getElementById('langSwitcher').value;
+            const dict = langDB[lang] || langDB['cs'];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(dict[key]) el.innerText = dict[key];
+            });
+        }
+
+        /* --- ŽIVÝ ČAS --- */
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('cs-CZ', { hour12: false });
+            const dateStr = now.toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            
+            document.getElementById('clock').innerText = timeStr;
+            document.getElementById('date').innerText = dateStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        /* --- JÍZDNÍ ŘÁDY LOGIKA --- */
+        function generateTimetables() {
+            const container = document.getElementById('live-timetables');
+            const lines = [
+                { l: '201', d: 'Hřbitov', t: 2 },
+                { l: '202', d: 'Albert hypermarket', t: 5 },
+                { l: '211', d: 'Podvihov', t: 12 },
+                { l: '1', d: 'Otrokovice, žel.st.', t: 4 },
+                { l: '33', d: 'Bartošova čtvrť', t: 8 },
+                { l: '221', d: 'Jaktař', t: 15 }
+            ];
+
+            container.innerHTML = lines.map(item => `
+                <div class="tt-row">
+                    <span class="tt-line">${item.l}</span>
+                    <div class="tt-info">
+                        <span class="tt-dest">${item.d}</span>
+                    </div>
+                    <span class="tt-time">za ${item.t} min</span>
+                </div>
+            `).join('');
+        }
+        generateTimetables();
+
+        /* --- AI ASISTENT LOGIKA --- */
+        function processAI() {
+            const query = document.getElementById('ai-query').value.toLowerCase();
+            const log = document.getElementById('ai-log');
+            let response = "";
+
+            if(query.includes('201')) {
+                response = "Linka 201 (Trolejbus) odjíždí ze zastávky Bílovecká směr Hřbitov za 2 minuty.";
+            } else if(query.includes('majitel')) {
+                response = "Majitelem vCompany je Petrsplayscz / Smatlina. Spolumajitelé jsou kubusrychlobus, ladislav_258 a adam037110.";
+            } else if(query.includes('čau') || query.includes('ahoj')) {
+                response = "Ahoj! Jsem tvůj vCompany asistent. Jak ti mohu dnes pomoci?";
+            } else if(query.includes('dszo')) {
+                response = "DSZO (Zlín) provozuje trolejbusové a autobusové linky. Nejoblíbenější je linka 1 do Otrokovic.";
+            } else {
+                response = "Omlouvám se, tento dotaz neumím zpracovat. Zkus se zeptat na 'linku 201' nebo 'majitele'.";
+            }
+
+            log.innerHTML += `<br><span style="color:#fff">> ${document.getElementById('ai-query').value}</span>`;
+            log.innerHTML += `<br>[AI]: ${response}`;
+            document.getElementById('ai-query').value = "";
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Enter pro AI
+        document.getElementById('ai-query').addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) { processAI(); }
+        });
+
+    </script>
 </body>
 </html>
