@@ -3,149 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dopravní Informační Systém</title>
+    <title>Dopravní Systém PRO</title>
     <style>
         :root {
-            --primary: #0056b3;
-            --bg: #f4f4f9;
-            --text: #333;
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             margin: 0;
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background 0.3s ease;
         }
 
-        /* Horní Menu */
+        /* Overlay pro jas */
+        #brightness-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Navigace */
         nav {
-            background: var(--primary);
+            background: var(--primary-color);
             color: white;
-            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .nav-links {
             display: flex;
+            gap: 5px;
         }
 
-        .nav-links div {
-            padding: 20px 15px;
+        .nav-item {
+            padding: 1.2rem 1rem;
             cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
         }
 
-        .nav-links div:hover {
-            background: rgba(255,255,255,0.2);
+        .nav-item:hover {
+            background: var(--secondary-color);
         }
 
-        .nav-links div.active {
-            background: #003d7a;
-            border-bottom: 3px solid white;
+        .nav-item.active {
+            background: var(--secondary-color);
+            border-bottom: 3px solid #60a5fa;
         }
 
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .lang-select {
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        select {
-            padding: 5px;
-            border-radius: 4px;
-        }
-
-        /* Obsah stránek */
+        /* Hlavní obsah */
         .container {
-            padding: 30px;
-            max-width: 1000px;
-            margin: 0 auto;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
         .page {
-            display: none; /* Skryje všechny stránky */
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            animation: fadeIn 0.4s;
+            display: none;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
         }
 
         .page.active {
-            display: block; /* Ukáže jen aktivní stránku */
+            display: block;
+            animation: slideUp 0.3s ease-out;
         }
 
-        @keyframes fadeIn {
+        @keyframes slideUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 { color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
+        h1, h2 { color: var(--primary-color); margin-top: 0; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        /* Seznamy */
         ul { list-style: none; padding: 0; }
-        li { padding: 8px 0; border-bottom: 1px dotted #ccc; }
+        li { 
+            padding: 0.6rem 0; 
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+        }
 
         .badge {
-            background: #eee;
-            padding: 2px 7px;
-            border-radius: 4px;
+            background: #dbeafe;
+            color: #1e40af;
             font-weight: bold;
-            margin-right: 8px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 12px;
+            min-width: 35px;
+            text-align: center;
         }
 
-        .links-btn a {
-            display: block;
-            background: #28a745;
-            color: white;
-            padding: 10px;
-            margin: 10px 0;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 5px;
+        /* Nastavení */
+        .settings-control {
+            background: #f1f5f9;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
         }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 1rem 0;
+            cursor: pointer;
+        }
+
+        /* Odkazy */
+        .links-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-link {
+            text-decoration: none;
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-link:hover { opacity: 0.9; }
+        .btn-discord { background: #5865F2; }
+        .btn-yt { background: #FF0000; }
     </style>
 </head>
 <body>
 
+<div id="brightness-overlay"></div>
+
 <nav>
     <div class="nav-links">
-        <div onclick="showPage('vozovna')" id="btn-vozovna" class="active">Vozovna</div>
-        <div onclick="showPage('nastaveni')" id="btn-nastaveni">Nastavení</div>
-        <div onclick="showPage('mdpo')" id="btn-mdpo">MDPO</div>
-        <div onclick="showPage('dszo')" id="btn-dszo">DSZO</div>
-        <div onclick="showPage('ingame')" id="btn-ingame">INGAME Linky</div>
+        <div class="nav-item active" onclick="showPage('vozovna')" id="m-vozovna">Vozovna</div>
+        <div class="nav-item" onclick="showPage('nastaveni')" id="m-nastaveni">Nastavení</div>
+        <div class="nav-item" onclick="showPage('mdpo')" id="m-mdpo">MDPO</div>
+        <div class="nav-item" onclick="showPage('dszo')" id="m-dszo">DSZO</div>
+        <div class="nav-item" onclick="showPage('ingame')" id="m-ingame">INGAME Linky</div>
     </div>
-    
-    <div class="controls">
-        <select id="langSelect" onchange="changeLanguage()">
-            <option value="cs">CS</option>
-            <option value="en">EN GB</option>
-            <option value="de">D</option>
-            <option value="ua">UA</option>
-            <option value="ru">RU</option>
-            <option value="sk">SK</option>
-            <option value="bg">Bulharština</option>
-        </select>
-    </div>
+
+    <select class="lang-select" id="langSwitcher" onchange="updateLanguage()">
+        <option value="cs">🇨🇿 CS</option>
+        <option value="en-gb">🇬🇧 EN GB</option>
+        <option value="en-us">🇺🇸 EN US</option>
+        <option value="de">🇩🇪 D</option>
+        <option value="ua">🇺🇦 UA</option>
+        <option value="ru">🇷🇺 RU</option>
+        <option value="sk">🇸🇰 SK</option>
+        <option value="bg">🇧🇬 BG</option>
+    </select>
 </nav>
 
 <div class="container">
 
+    <!-- VOZOVNA -->
     <div id="vozovna" class="page active">
-        <h2 id="t-fleet">Vozový park</h2>
+        <h1 id="h-vozovna">Vozový park</h1>
         <div class="grid">
-            <div>
-                <h3>Autobusy</h3>
+            <div class="card">
+                <h2 id="h-busy">Autobusy</h2>
                 <ul>
                     <li>SOR BN12</li>
                     <li>Solaris Urbino 12 IV & III</li>
@@ -154,11 +218,12 @@
                     <li>MAN Lion's City</li>
                 </ul>
             </div>
-            <div>
-                <h3>Trolejbusy</h3>
+            <div class="card">
+                <h2 id="h-trol">Trolejbusy</h2>
                 <ul>
                     <li>Škoda 14 Tr / 15 Tr</li>
-                    <li>Solaris Trolino 12 III / 15 II</li>
+                    <li>Solaris Trolino 12 III</li>
+                    <li>Solaris Trolino 15 II</li>
                     <li>Solaris Trolino 18 III & IV</li>
                     <li>Solaris Trolino 24 IV</li>
                     <li>ZiU-9</li>
@@ -167,104 +232,152 @@
         </div>
     </div>
 
+    <!-- NASTAVENÍ -->
     <div id="nastaveni" class="page">
-        <h2 id="t-settings">Nastavení systému</h2>
-        <p>Upravte si parametry zobrazení:</p>
-        <label id="t-brightness">Jas obrazovky:</label><br>
-        <input type="range" min="0" max="100" value="80" style="width: 100%; margin-top: 10px;">
-        <br><br>
-        <p id="t-lang-info">Vybraný jazyk ovlivňuje popisky menu a názvy sekcí.</p>
+        <h1 id="h-nastaveni">Nastavení systému</h1>
+        <div class="settings-control">
+            <label id="l-brightness" style="font-weight: bold;">Jas displeje</label>
+            <input type="range" id="brightnessRange" min="0" max="80" value="0" oninput="adjustBrightness(this.value)">
+            <p id="l-lang-info" style="color: var(--text-muted); font-size: 0.9rem;">Změňte jazyk v horním menu.</p>
+        </div>
     </div>
 
+    <!-- MDPO -->
     <div id="mdpo" class="page">
-        <h2>MDPO Opava</h2>
-        <h3>Trolejbusy</h3>
+        <h1>MDPO Opava</h1>
+        <h2 id="h-mdpo-trol">Trolejbusy</h2>
         <ul>
             <li><span class="badge">201</span> Kylešovice, Bílovecká ↔ Městský hřbitov</li>
             <li><span class="badge">202</span> Kateřinky ↔ Albert hypermarket</li>
             <li><span class="badge">203</span> Globus ↔ Jaktař</li>
             <li><span class="badge">204</span> Kylešovice, škola → Englišova</li>
         </ul>
-        <h3>Autobusy</h3>
-        <div style="max-height: 300px; overflow-y: auto;">
+        <h2 id="h-mdpo-bus">Autobusy</h2>
+        <div style="height: 250px; overflow-y: auto; padding-right: 10px;">
             <ul>
                 <li><span class="badge">211</span> Praskova ↔ Podvihov</li>
                 <li><span class="badge">212</span> Divadlo ↔ Vlaštovičky</li>
-                <li><span class="badge">213</span> Kylešovice ↔ Vávrovice</li>
-                <li><span class="badge">230</span> Tesco Okružní (Bezplatná)</li>
-                </ul>
+                <li><span class="badge">213</span> Kylešovice, SÚS ↔ Vávrovice</li>
+                <li><span class="badge">230</span> Tesco Okružní (Free)</li>
+                <li><span class="badge">221</span> Raduň ↔ Podvihov</li>
+            </ul>
         </div>
     </div>
 
+    <!-- DSZO -->
     <div id="dszo" class="page">
-        <h2>DSZO (Zlín a Otrokovice)</h2>
-        <p>Aktuální linky nalezené v systému:</p>
-        <ul>
-            <li><strong>Trolejbusy:</strong> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14</li>
-            <li><strong>Autobusy:</strong> 31, 32, 33, 34, 35, 36, 38, 46, 47, 51, 52, 53, 55, 70</li>
-        </ul>
+        <h1>DSZO (Zlín & Otrokovice)</h1>
+        <p id="l-dszo-desc">Integrovaná doprava zlínského kraje.</p>
+        <div class="card">
+            <h3>Trolejbusy: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14</h3>
+            <h3>Autobusy: 31, 32, 33, 34, 35, 36, 38, 46, 47, 51, 52, 53, 55, 70</h3>
+        </div>
     </div>
 
+    <!-- INGAME -->
     <div id="ingame" class="page">
-        <h2 id="t-ingame-title">INGAME Linky & Odkazy</h2>
-        <p><strong>Autobusy:</strong> A1, A2, A3, A10, 159, 221, 301, 100, 164, 225, 602, 128, 169, 238, 139, 173, 248, 151, 178, 252</p>
-        <p><strong>Trolejbusy:</strong> 20, 21, 22, 23, 24</p>
-        <hr>
-        <div class="links-btn">
-            <a href="https://discord.gg/beSUmraDMC" target="_blank">Official Discord</a>
-            <a href="https://youtube.com/@petrsplayscz" target="_blank">Official YouTube</a>
-            <a href="https://discord.gg/aFfqqdFe3A" target="_blank">Ostrava vCompany</a>
+        <h1 id="h-ingame">INGAME Informace</h1>
+        <div class="card">
+            <h3 id="h-lines-avail">Dostupné linky:</h3>
+            <p><strong>BUS:</strong> A1, A2, A3, A10, 159, 221, 301, 100, 164, 225, 602, 128, 169, 238, 139, 173, 248, 151, 178, 252</p>
+            <p><strong>TROL:</strong> 20, 21, 22, 23, 24</p>
+        </div>
+        
+        <div class="links-grid">
+            <a href="https://discord.gg/beSUmraDMC" class="btn-link btn-discord">Discord Official</a>
+            <a href="https://youtube.com/@petrsplayscz" class="btn-link btn-yt">YouTube Channel</a>
+            <a href="https://discord.gg/aFfqqdFe3A" class="btn-link">Ostrava vCompany</a>
         </div>
     </div>
 
 </div>
 
 <script>
-    // Funkce pro přepínání stránek
-    function showPage(pageId) {
-        // Skryj všechny stránky
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(p => p.classList.remove('active'));
-        
-        // Deaktivuj všechna tlačítka v menu
-        const navs = document.querySelectorAll('.nav-links div');
-        navs.forEach(n => n.classList.remove('active'));
-
-        // Aktivuj vybranou stránku a tlačítko
-        document.getElementById(pageId).classList.add('active');
-        document.getElementById('btn-' + pageId).classList.add('active');
-    }
-
-    // Funkce pro překlady (ukázka pro CS a EN)
-    const langData = {
-        cs: {
-            fleet: "Vozovna",
-            settings: "Nastavení",
-            ingame: "INGAME Linky",
-            brightness: "Jas obrazovky:",
-            fleet_h2: "Vozový park"
+    // DATABÁZE PŘEKLADŮ
+    const translations = {
+        'cs': {
+            'm-vozovna': 'Vozovna', 'm-nastaveni': 'Nastavení', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'INGAME Linky',
+            'h-vozovna': 'Vozový park', 'h-busy': 'Autobusy', 'h-trol': 'Trolejbusy', 'h-nastaveni': 'Nastavení systému',
+            'l-brightness': 'Jas displeje', 'l-lang-info': 'Změňte jazyk v horním menu.', 'h-mdpo-trol': 'Trolejbusy',
+            'h-mdpo-bus': 'Autobusy', 'l-dszo-desc': 'Integrovaná doprava zlínského kraje.', 'h-ingame': 'INGAME Informace',
+            'h-lines-avail': 'Dostupné linky:'
         },
-        en: {
-            fleet: "Depot",
-            settings: "Settings",
-            ingame: "INGAME Lines",
-            brightness: "Brightness:",
-            fleet_h2: "Fleet List"
+        'en-gb': {
+            'm-vozovna': 'Depot', 'm-nastaveni': 'Settings', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'INGAME Lines',
+            'h-vozovna': 'Fleet', 'h-busy': 'Buses', 'h-trol': 'Trolleybuses', 'h-nastaveni': 'System Settings',
+            'l-brightness': 'Display Brightness', 'l-lang-info': 'Change language in the top menu.', 'h-mdpo-trol': 'Trolleybuses',
+            'h-mdpo-bus': 'Buses', 'l-dszo-desc': 'Integrated transport of the Zlín region.', 'h-ingame': 'INGAME Info',
+            'h-lines-avail': 'Available lines:'
+        },
+        'en-us': {
+            'm-vozovna': 'Bus Yard', 'm-nastaveni': 'Settings', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'INGAME Routes',
+            'h-vozovna': 'Fleet', 'h-busy': 'Buses', 'h-trol': 'Trolleybuses', 'h-nastaveni': 'Settings',
+            'l-brightness': 'Brightness', 'l-lang-info': 'Change language above.', 'h-mdpo-trol': 'Trolleybuses',
+            'h-mdpo-bus': 'Buses', 'l-dszo-desc': 'Zlin Region Transit.', 'h-ingame': 'INGAME Information',
+            'h-lines-avail': 'Routes:'
+        },
+        'de': {
+            'm-vozovna': 'Depot', 'm-nastaveni': 'Einstellungen', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'INGAME Linien',
+            'h-vozovna': 'Fuhrpark', 'h-busy': 'Busse', 'h-trol': 'Oberleitungsbusse', 'h-nastaveni': 'Systemeinstellungen',
+            'l-brightness': 'Helligkeit', 'l-lang-info': 'Sprache im Menü ändern.', 'h-mdpo-trol': 'Trolleybusse',
+            'h-mdpo-bus': 'Busse', 'l-dszo-desc': 'Verkehrsbetriebe Zlín.', 'h-ingame': 'INGAME Info',
+            'h-lines-avail': 'Verfügbare Linien:'
+        },
+        'ua': {
+            'm-vozovna': 'Депо', 'm-nastaveni': 'Налаштування', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'Ігрові лінії',
+            'h-vozovna': 'Парк машин', 'h-busy': 'Автобуси', 'h-trol': 'Тролейбуси', 'h-nastaveni': 'Налаштування системи',
+            'l-brightness': 'Яскравість', 'l-lang-info': 'Змініть мову у верхньому меню.', 'h-mdpo-trol': 'Тролейбуси',
+            'h-mdpo-bus': 'Автобуси', 'l-dszo-desc': 'Транспорт Злінського краю.', 'h-ingame': 'Інформація',
+            'h-lines-avail': 'Доступні лінії:'
+        },
+        'ru': {
+            'm-vozovna': 'Депо', 'm-nastaveni': 'Настройки', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'Игровые линии',
+            'h-vozovna': 'Парк машин', 'h-busy': 'Автобусы', 'h-trol': 'Троллейбусы', 'h-nastaveni': 'Настройки системы',
+            'l-brightness': 'Яркость', 'l-lang-info': 'Измените язык в меню.', 'h-mdpo-trol': 'Троллейбусы',
+            'h-mdpo-bus': 'Автобусы', 'l-dszo-desc': 'Транспорт Злинского края.', 'h-ingame': 'Информация',
+            'h-lines-avail': 'Доступные линии:'
+        },
+        'sk': {
+            'm-vozovna': 'Vozovňa', 'm-nastaveni': 'Nastavenia', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'INGAME Linky',
+            'h-vozovna': 'Vozový park', 'h-busy': 'Autobusy', 'h-trol': 'Trolejbusy', 'h-nastaveni': 'Nastavenia systému',
+            'l-brightness': 'Jas displeja', 'l-lang-info': 'Zmeňte jazyk v hornom menu.', 'h-mdpo-trol': 'Trolejbusy',
+            'h-mdpo-bus': 'Autobusy', 'l-dszo-desc': 'Integrovaná doprava zlínskeho kraja.', 'h-ingame': 'INGAME Informácie',
+            'h-lines-avail': 'Dostupné linky:'
+        },
+        'bg': {
+            'm-vozovna': 'Депо', 'm-nastaveni': 'Настройки', 'm-mdpo': 'MDPO', 'm-dszo': 'DSZO', 'm-ingame': 'INGAME Линии',
+            'h-vozovna': 'Парк', 'h-busy': 'Автобуси', 'h-trol': 'Тролейбуси', 'h-nastaveni': 'Системни настройки',
+            'l-brightness': 'Яркост', 'l-lang-info': 'Промяна на езика от менюто.', 'h-mdpo-trol': 'Тролейбуси',
+            'h-mdpo-bus': 'Автобуси', 'l-dszo-desc': 'Транспорт Злин.', 'h-ingame': 'Информация',
+            'h-lines-avail': 'Налични линии:'
         }
     };
 
-    function changeLanguage() {
-        const lang = document.getElementById('langSelect').value;
-        if(lang === 'en' || lang === 'cs') {
-            const data = langData[lang];
-            document.getElementById('btn-vozovna').innerText = data.fleet;
-            document.getElementById('btn-nastaveni').innerText = data.settings;
-            document.getElementById('btn-ingame').innerText = data.ingame;
-            document.getElementById('t-fleet').innerText = data.fleet_h2;
-            document.getElementById('t-brightness').innerText = data.brightness;
-        } else {
-            alert("Překlad pro tento jazyk (kromě CS/EN) není v této ukázce implementován, ale struktura je připravena.");
+    // LOGIKA PŘEPÍNÁNÍ STRÁNEK
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        
+        document.getElementById(pageId).classList.add('active');
+        document.getElementById('m-' + pageId).classList.add('active');
+    }
+
+    // LOGIKA JAZYKA
+    function updateLanguage() {
+        const selectedLang = document.getElementById('langSwitcher').value;
+        const langPack = translations[selectedLang];
+        
+        for (const [id, text] of Object.entries(langPack)) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = text;
         }
+    }
+
+    // LOGIKA JASU
+    function adjustBrightness(val) {
+        // Hodnota slideru 0 = jasno (opacity 0), Hodnota slideru 80 = tma (opacity 0.8)
+        const opacity = val / 100;
+        document.getElementById('brightness-overlay').style.opacity = opacity;
     }
 </script>
 
